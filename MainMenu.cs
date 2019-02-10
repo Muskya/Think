@@ -16,31 +16,45 @@ namespace Think
     class MainMenu
     {
         private Texture2D _backgroundImage;
+        private Song _backgroundTheme;
         private SpriteFont _mainFont;
 
-        ContentHandler _mainMenuContent;
-
-        public MainMenu(ContentHandler content)
+        public MainMenu(Texture2D menu_bg, Song menu_theme)
         {
-            //Charge le nouveau content
-            _mainMenuContent = content;
+            _backgroundImage = menu_bg;
+            _backgroundTheme = menu_theme;
+        }
 
-            _backgroundImage = _mainMenuContent.Load<Texture2D>("menu_background");
-            _mainFont = _mainMenuContent.Load<SpriteFont>("ariaFont");
+        //Called just once before Update()
+        public void BeginRun()
+        {
+            //Menu theme
+            #region Menu theme
+            MediaPlayer.Play(_backgroundTheme);
+
+            MediaPlayer.IsRepeating = true; //Boucle la musique
+            MediaPlayer.Volume = 0.45f;
+            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
+            #endregion
         }
 
         public void Update(GameTime gt)
-        {
+        { 
 
         }
 
         public void Draw(GameTime gt, SpriteBatch sb)
         {
-            sb.Draw(_backgroundImage, new Vector2(0, 0), Color.White);
-            sb.DrawString(_mainFont, "THINK.",
-                new Vector2(_backgroundImage.Width / 2, (_backgroundImage.Height / 2 - 50)),
-                Color.White);
-
+            sb.Draw(_backgroundImage, Vector2.Zero, Color.White);
         }
+
+        //Evenement qui decrease lentement le volume quand la musique 
+        //va s'arrêter pour loop de façon cohérente
+        private void MediaPlayer_MediaStateChanged(object sender, EventArgs e) {
+            MediaPlayer.Volume -= 0.1f; 
+            MediaPlayer.Play(_backgroundTheme);
+        }
+
+        
     }
 }

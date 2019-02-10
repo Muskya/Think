@@ -16,12 +16,20 @@ namespace Think
     public class Main : Game
     {
         //Relatif au moteur
+        #region Engine Relative
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        float screenHeight, screenWidth;
+        #endregion
 
         //Logique d'éxecution
-        ContentHandler content;
         MainMenu mainMenu;
+
+        //Content
+        #region Main Menu Content
+        private Texture2D _menuBackground;
+        private Song _menuTheme;
+        #endregion
 
         //Enumération des différents états du jeu
         GameState gameState;
@@ -32,36 +40,63 @@ namespace Think
             GameRunning
         }
 
+        //LE PROGRAMME VA LA EN PREMIER ENCULE
         public Main()
-        {
-            graphics = new GraphicsDeviceManager(this);
-
-            //Content related stuff
-            Content.RootDirectory = "Content";
-            content = new ContentHandler(Content.ServiceProvider, Content.RootDirectory);
-        }
-
-        protected override void Initialize()
         {
             //Initialisation des objets / classes
             gameState = GameState.MainMenu;
-            mainMenu = new MainMenu(content);
+            graphics = new GraphicsDeviceManager(this);
+            
+            //Content related stuff
+            Content.RootDirectory = "Content";
+        }
 
+        //BASE.INITIALIZE() CALLS LOADCONTENT() && UNLOADCONTENT()
+        protected override void Initialize()
+        {
+            //Screen relative
+            #region Screen relative
+            //GPU 
+            graphics.HardwareModeSwitch = false;
+
+            //Game window
+            //Graphics.ToggleFullScreen();
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = 1280;
+
+            Window.Title = "THINK ";
+            Window.IsBorderless = false;
+            Window.AllowUserResizing = true;
+            Window.AllowAltF4 = true;
+
+            //Others
             IsMouseVisible = true;
+
+            graphics.ApplyChanges();
+            #endregion
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-        }
 
-    
+            #region Main Menu
+            _menuBackground = Content.Load<Texture2D>("menu_background");
+            _menuTheme = Content.Load<Song>("menu_theme");
+            mainMenu = new MainMenu(_menuBackground, _menuTheme);
+            #endregion
+        }
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+        }
+
+        //Called just once before Update()
+        protected override void BeginRun()
+        {
+            mainMenu.BeginRun(); //BeginRun du MainMenu (background fade, theme..)
         }
 
         protected override void Update(GameTime gameTime)
@@ -69,29 +104,17 @@ namespace Think
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            switch(gameState)
-            {
-                case GameState.MainMenu:
-                    
-                    break;
-                case GameState.GameRunning:
+            mainMenu.Update(gameTime);
 
-                    break;
-                case GameState.GameOver:
-
-                    break;
-
-            }
-            
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
             spriteBatch.Begin();
+
             mainMenu.Draw(gameTime, spriteBatch);
+
             spriteBatch.End();
 
             base.Draw(gameTime);
