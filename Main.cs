@@ -19,33 +19,30 @@ namespace Think
         #region Engine Relative
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        #endregion
+
+        #region Propriétés de jeu
         float screenHeight, screenWidth;
         #endregion
 
         //Logique d'éxecution
         MainMenu mainMenu;
 
-        //Content
-        #region Main Menu Content
-        private Texture2D _menuBackground;
-        private Song _menuTheme;
-        #endregion
-
         //Enumération des différents états du jeu
         GameState gameState;
         public enum GameState
         {
-            GameOver,
             MainMenu,
-            GameRunning
+            GameRunning,
+            GameOver
         }
 
         //LE PROGRAMME VA LA EN PREMIER ENCULE
         public Main()
         {
-            //Initialisation des objets / classes
             gameState = GameState.MainMenu;
             graphics = new GraphicsDeviceManager(this);
+            mainMenu = new MainMenu();
             
             //Content related stuff
             Content.RootDirectory = "Content";
@@ -83,11 +80,13 @@ namespace Think
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             #region Main Menu
-            _menuBackground = Content.Load<Texture2D>("menu_background");
-            _menuTheme = Content.Load<Song>("menu_theme");
-            mainMenu = new MainMenu(_menuBackground, _menuTheme);
+            mainMenu.BackgroundImage = Content.Load<Texture2D>("menu_background");
+            mainMenu.BackgroundTheme = Content.Load<Song>("menu_theme");
+            mainMenu.BackgroundMG = Content.Load<Texture2D>("monogame_screen");
+            mainMenu.ArialDebugFont = Content.Load<SpriteFont>("ariaFont");
             #endregion
         }
+
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
@@ -101,8 +100,10 @@ namespace Think
 
         protected override void Update(GameTime gameTime)
         {
+            #region Quit Game Shortcuts
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            #endregion
 
             mainMenu.Update(gameTime);
 
