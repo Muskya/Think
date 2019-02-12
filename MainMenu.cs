@@ -17,7 +17,7 @@ namespace Think
     {
         public Texture2D BackgroundMG { get; set; }
         //Layers displaying conditional booleans
-        private bool mgFadedOut = false, mgFadeIn = false;
+        public bool mgFadedOut = false, mgFadeIn = false;
 
         public Texture2D BackgroundImage { get; set; }
         //Délai d'apparaition. 1Sec/60fps = 0.016 donc ~2 sec de délai
@@ -57,7 +57,6 @@ namespace Think
             //intervalle de temps depuis le dernier appel de Update(). 
             //Donc ici, .TotalSeconds renverra 1 seconde / 60 frames = ~ 0.016.
             imgFadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
-
             #region FadeIn/Out MG + Menu
             if (imgFadeDelay <= 0) //
             {
@@ -93,6 +92,8 @@ namespace Think
             }
             #endregion
 
+            
+
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -102,6 +103,7 @@ namespace Think
 
             //Si la mention MonoGame a fini d'être affichée
             if (mgFadedOut) {
+                //Affiche le menu mrincipal
                 spriteBatch.Draw(BackgroundImage, Vector2.Zero, new Color(r, g, b));
 
                 //Affichage boutons, options, logos, other...

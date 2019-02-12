@@ -27,6 +27,7 @@ namespace Think
 
         //Logique d'éxecution
         MainMenu mainMenu;
+        Button btnMenu;
 
         //Enumération des différents états du jeu
         GameState gameState;
@@ -37,12 +38,12 @@ namespace Think
             GameOver
         }
 
-        //LE PROGRAMME VA LA EN PREMIER ENCULE
         public Main()
         {
             gameState = GameState.MainMenu;
             graphics = new GraphicsDeviceManager(this);
             mainMenu = new MainMenu();
+            btnMenu = new Button();
             
             //Content related stuff
             Content.RootDirectory = "Content";
@@ -85,6 +86,12 @@ namespace Think
             mainMenu.BackgroundMG = Content.Load<Texture2D>("monogame_screen");
             mainMenu.ArialDebugFont = Content.Load<SpriteFont>("ariaFont");
             #endregion
+
+            #region Main Menu Buttons
+            btnMenu.BtnTextNormal = Content.Load<Texture2D>("titleBtnNormal");
+            btnMenu.BtnTextHovered = Content.Load<Texture2D>("titleBtnHover");
+            btnMenu.BtnTextPressed = Content.Load<Texture2D>("titleBtnPressed");
+            #endregion
         }
 
         protected override void UnloadContent()
@@ -106,6 +113,7 @@ namespace Think
             #endregion
 
             mainMenu.Update(gameTime);
+            btnMenu.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -115,6 +123,8 @@ namespace Think
             spriteBatch.Begin();
 
             mainMenu.Draw(gameTime, spriteBatch);
+            if (mainMenu.mgFadedOut)
+                btnMenu.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
 

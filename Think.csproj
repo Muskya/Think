@@ -42,8 +42,10 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Button.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="MainMenu.cs" />
+    <Compile Include="MainMenuButton.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
