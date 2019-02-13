@@ -15,19 +15,17 @@ namespace Think
 {
     class Button
     {   
-        public Texture2D BtnTextNormal{ get; set; }
-        public Texture2D BtnTextHovered { get; set; }
-        public Texture2D BtnTextPressed { get; set; }
+        public Texture2D TextureNormal{ get; set; }
+        public Texture2D TextureHovered { get; set; }
+        public Texture2D TexturePressed { get; set; }
 
-        public Texture2D BtnTexture { get; set; }
-        public Rectangle BtnRectangle { get; set; }
-        public Vector2 BtnPosition { get; set; }
+        public Texture2D _texture { get; set; }
+        public Rectangle _rectangle { get; set; }
+        public Vector2 _position { get; set; }
+        public bool btnClicked = false; //Permet les transitions texturales
 
-        public MouseState MouseState { get; set; }
-        public bool btnClicked = false;
-
-        static List<Button> buttons = new List<Button>(3);
-
+        static List<Button> mainMenuPanel = new List<Button>();
+        
         enum BtnState
         {
             Normal,
@@ -36,30 +34,28 @@ namespace Think
         }
         BtnState buttonState = BtnState.Normal;
 
-        public Button ()
+        public Button (Vector2 btnPos)
         {
-
+            
         }
 
         public void BtnStateManager()
         {
-            MouseState = Mouse.GetState();
-            
             //Si le bouton contient le curseur
-            if (BtnRectangle.Contains(MouseState.X, MouseState.Y))
+            if (_rectangle.Contains(Mouse.GetState().X, Mouse.GetState().Y))
             {
                 //La texture est de type "hovered"
-                BtnTexture = BtnTextHovered;
+                _texture = TextureHovered;
                 buttonState = BtnState.Hovered;
 
                 //Si on clique sur le bouton
-                if (MouseState.LeftButton == ButtonState.Pressed)
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                     btnClicked = true;
 
             } else //Si le curseur sort du bouton
             {
                 //La texture est de type "normal"
-                BtnTexture = BtnTextNormal;
+                _texture = TextureNormal;
                 buttonState = BtnState.Normal;
 
                 btnClicked = false;
@@ -68,7 +64,7 @@ namespace Think
             //Si on a cliqué sur le bouton
             if (btnClicked)
                 //La texture est de type "Pressed"
-                BtnTexture = BtnTextPressed;
+                _texture = TexturePressed;
                 buttonState = BtnState.Pressed;
         }
 
@@ -78,14 +74,14 @@ namespace Think
 
             //L'initialisation du rectangle reste statique (pas dans le Update)
             //car la position du bouton est connue à l'avance, il ne bouge pas.
-            BtnRectangle = new Rectangle((int)BtnPosition.X, (int)BtnPosition.Y,
-                BtnTexture.Width, BtnTexture.Height);
+            _rectangle = new Rectangle((int)_position.X, (int)_position.Y,
+                _texture.Width, _texture.Height);
 
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(BtnTexture, new Vector2(50, 50), Color.White);
+            spriteBatch.Draw(_texture, new Vector2(50, 50), Color.White);
         }
     }
 }

@@ -25,9 +25,11 @@ namespace Think
         float screenHeight, screenWidth;
         #endregion
 
+        //Global
+        static MouseState _mouseState;
+
         //Références
         MainMenu mainMenu;
-        Button btnMenu;
 
         //Enumération des différents états du jeu
         GameState gameState;
@@ -43,7 +45,6 @@ namespace Think
             gameState = GameState.MainMenu;
             graphics = new GraphicsDeviceManager(this);
             mainMenu = new MainMenu();
-            btnMenu = new Button();
             
             //Content related stuff
             Content.RootDirectory = "Content";
