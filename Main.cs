@@ -15,7 +15,7 @@ namespace Think
 {
     public class Main : Game
     {
-        //Relatif au moteur
+        //Relatif au framework
         #region Engine Relative
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -25,13 +25,10 @@ namespace Think
         float screenHeight, screenWidth;
         #endregion
 
-        //Global
-        static MouseState _mouseState;
-
         //Références
         MainMenu mainMenu;
 
-        //Enumération des différents états du jeu
+        //Game States (more to come ?)
         GameState gameState;
         public enum GameState
         {
@@ -42,8 +39,9 @@ namespace Think
 
         public Main()
         {
-            gameState = GameState.MainMenu;
             graphics = new GraphicsDeviceManager(this);
+
+            //Class references
             mainMenu = new MainMenu();
             
             //Content related stuff
@@ -55,6 +53,9 @@ namespace Think
         {
             //Screen relative
             #region Screen relative
+
+            //Engine relative
+            gameState = GameState.MainMenu;
 
             //GPU 
             graphics.HardwareModeSwitch = false;
@@ -83,10 +84,10 @@ namespace Think
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             #region Main Menu
-            mainMenu.BackgroundImage = Content.Load<Texture2D>("menu_background");
-            mainMenu.BackgroundTheme = Content.Load<Song>("menu_theme");
-            mainMenu.BackgroundMG = Content.Load<Texture2D>("monogame_screen");
-            mainMenu.ArialDebugFont = Content.Load<SpriteFont>("ariaFont");
+            mainMenu._backgroundImg = Content.Load<Texture2D>("menu_background");
+            mainMenu._backgroundMG = Content.Load<Texture2D>("monogame_screen");
+            mainMenu._backgroundTheme = Content.Load<Song>("menu_theme");
+            mainMenu._debugFontArial = Content.Load<SpriteFont>("ariaFont");
             #endregion
 
             #region Main Menu Buttons
@@ -113,7 +114,6 @@ namespace Think
             #endregion
 
             mainMenu.Update(gameTime);
-            btnMenu.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -124,11 +124,6 @@ namespace Think
 
             //Draw le MainMenu. (Mention Monogame + Title Screen
             mainMenu.Draw(gameTime, spriteBatch);
-            if (mainMenu.mgFadedOut)
-            {
-                //Draw les boutons lorsque la mention Monogame est terminée
-                btnMenu.Draw(gameTime, spriteBatch);
-            }
 
             spriteBatch.End();
 

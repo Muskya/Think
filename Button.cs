@@ -23,8 +23,6 @@ namespace Think
         public Rectangle _rectangle { get; set; }
         public Vector2 _position { get; set; }
         public bool btnClicked = false; //Permet les transitions texturales
-
-        static List<Button> mainMenuPanel = new List<Button>();
         
         enum BtnState
         {
@@ -34,11 +32,22 @@ namespace Think
         }
         BtnState buttonState = BtnState.Normal;
 
-        public Button (Vector2 btnPos)
+        public Button (Vector2 btnPos, Texture2D normal, Texture2D hovered,
+               Texture2D pressed)
         {
-            
+            //Attribution des paramètres aux propriétés
+            this._position = btnPos;
+            this.TextureNormal = normal;
+            this.TextureHovered = hovered;
+            this.TexturePressed = pressed;
+
+            //L'initialisation du rectangle se fait une fois (pas dans le Update)
+            //car la position du bouton est fixe. Elle ne bouge pas.
+            _rectangle = new Rectangle((int)_position.X, (int)_position.Y,
+                _texture.Width, _texture.Height);
         }
 
+        //Gère l'état textural et logique du bouton.
         public void BtnStateManager()
         {
             //Si le bouton contient le curseur
@@ -65,23 +74,18 @@ namespace Think
             if (btnClicked)
                 //La texture est de type "Pressed"
                 _texture = TexturePressed;
-                buttonState = BtnState.Pressed;
+                buttonState = BtnState.Pressed;    
         }
 
         public void Update(GameTime gameTime)
         {
             BtnStateManager();
 
-            //L'initialisation du rectangle reste statique (pas dans le Update)
-            //car la position du bouton est connue à l'avance, il ne bouge pas.
-            _rectangle = new Rectangle((int)_position.X, (int)_position.Y,
-                _texture.Width, _texture.Height);
-
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, new Vector2(50, 50), Color.White);
+            spriteBatch.Draw(_texture, _position, Color.White);
         }
     }
 }
