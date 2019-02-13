@@ -26,6 +26,8 @@ namespace Think
         public MouseState MouseState { get; set; }
         public bool btnClicked = false;
 
+        static List<Button> buttons = new List<Button>(3);
+
         enum BtnState
         {
             Normal,
@@ -35,7 +37,9 @@ namespace Think
         BtnState buttonState = BtnState.Normal;
 
         public Button ()
-        { }
+        {
+
+        }
 
         public void BtnStateManager()
         {

@@ -25,7 +25,7 @@ namespace Think
         float screenHeight, screenWidth;
         #endregion
 
-        //Logique d'éxecution
+        //Références
         MainMenu mainMenu;
         Button btnMenu;
 
@@ -54,14 +54,15 @@ namespace Think
         {
             //Screen relative
             #region Screen relative
+
             //GPU 
             graphics.HardwareModeSwitch = false;
 
             //Game window
             //Graphics.ToggleFullScreen();
-            graphics.PreferredBackBufferHeight = 720;
-            graphics.PreferredBackBufferWidth = 1280;
-
+            screenHeight = 720; screenWidth = 1280;
+            graphics.PreferredBackBufferHeight = (int)screenHeight;
+            graphics.PreferredBackBufferWidth = (int)screenWidth;
             Window.Title = "THINK ";
             Window.IsBorderless = false;
             Window.AllowUserResizing = true;
@@ -88,9 +89,7 @@ namespace Think
             #endregion
 
             #region Main Menu Buttons
-            btnMenu.BtnTextNormal = Content.Load<Texture2D>("titleBtnNormal");
-            btnMenu.BtnTextHovered = Content.Load<Texture2D>("titleBtnHover");
-            btnMenu.BtnTextPressed = Content.Load<Texture2D>("titleBtnPressed");
+            
             #endregion
         }
 
@@ -122,9 +121,13 @@ namespace Think
         {
             spriteBatch.Begin();
 
+            //Draw le MainMenu. (Mention Monogame + Title Screen
             mainMenu.Draw(gameTime, spriteBatch);
             if (mainMenu.mgFadedOut)
+            {
+                //Draw les boutons lorsque la mention Monogame est terminée
                 btnMenu.Draw(gameTime, spriteBatch);
+            }
 
             spriteBatch.End();
 
