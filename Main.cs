@@ -83,16 +83,9 @@ namespace Think
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            #region Main Menu
-            mainMenu._backgroundImg = Content.Load<Texture2D>("menu_background");
-            mainMenu._backgroundMG = Content.Load<Texture2D>("monogame_screen");
-            mainMenu._backgroundTheme = Content.Load<Song>("menu_theme");
-            mainMenu._debugFontArial = Content.Load<SpriteFont>("ariaFont");
-            #endregion
-
-            #region Main Menu Buttons
+            //Load le content du main menu
+            mainMenu.LoadContent(this.Content);
             
-            #endregion
         }
 
         protected override void UnloadContent()
@@ -122,7 +115,7 @@ namespace Think
         {
             spriteBatch.Begin();
 
-            //Draw le MainMenu. (Mention Monogame + Title Screen
+            //Draw le MainMenu. (Mention Monogame + Title Screen)
             mainMenu.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();

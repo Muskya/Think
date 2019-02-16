@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Think
 {
-    class Button
+    abstract class Button
     {   
         public Texture2D TextureNormal{ get; set; }
         public Texture2D TextureHovered { get; set; }
@@ -48,7 +48,7 @@ namespace Think
         }
 
         //Gère l'état textural et logique du bouton.
-        public void BtnStateManager()
+        protected virtual void BtnStateManager()
         {
             //Si le bouton contient le curseur
             if (_rectangle.Contains(Mouse.GetState().X, Mouse.GetState().Y))
@@ -77,13 +77,12 @@ namespace Think
                 buttonState = BtnState.Pressed;    
         }
 
-        public void Update(GameTime gameTime)
+        protected virtual void Update(GameTime gameTime)
         {
             BtnStateManager();
-
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        protected virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, _position, Color.White);
         }

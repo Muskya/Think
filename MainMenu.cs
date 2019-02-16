@@ -29,7 +29,8 @@ namespace Think
         private int _r = 0, _g = 0, _b = 0;
 
         //Panel de boutons
-        List<Button> menuPanel;
+        List<TitleButton> menuPanel;
+        TitleButton test;
 
         #endregion
 
@@ -46,7 +47,10 @@ namespace Think
         #endregion
 
         public MainMenu()
-        { }
+        {
+            menuPanel = new List<TitleButton>();
+            
+        }
 
         //Called just once before Update()
         public void BeginRun()
@@ -69,11 +73,18 @@ namespace Think
             int yPosScaler = 50;
             for (int i=0;i<3;i++)
             {
-                menuPanel.Add(new Button(new Vector2(50, yPosScaler)));
+                //menuPanel.Add(new Button(new Vector2(50, yPosScaler)));
                 yPosScaler += 50;
-                
             }
             #endregion
+        }
+
+        public void LoadContent(ContentManager Content)
+        {
+            this._backgroundImg = Content.Load<Texture2D>("menu_background");
+            this._backgroundMG = Content.Load<Texture2D>("monogame_screen");
+            this._backgroundTheme = Content.Load<Song>("menu_theme");
+            this._debugFontArial = Content.Load<SpriteFont>("ariaFont");
         }
 
         public void Update(GameTime gameTime)
@@ -132,11 +143,12 @@ namespace Think
                 spriteBatch.Draw(_backgroundImg, Vector2.Zero, new Color(_r, _g, _b));
 
                 //Affichage boutons, options, logos, other...
-                for (int i=0;i<3;i++)
-                {
-                    spriteBatch.Draw(menuPanel[i]._texture,
-                                     menuPanel[i]._position, Color.White);
-                }
+                //for (int i = 0; i < 3; i++)
+                //{
+                //    spriteBatch.Draw(menuPanel[i]._texture,
+                //                     menuPanel[i]._position, Color.White);
+                //}
+
             }
 
             //Debug stuff
