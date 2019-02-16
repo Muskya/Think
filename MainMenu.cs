@@ -19,7 +19,8 @@ namespace Think
         #region GUI
         public Texture2D _backgroundMG { get; set; }
         //Layers displaying conditional booleans
-        public bool _mgFadedOut = false, _mgFadedIn = false;
+        public bool _mgFadedOut = false, _mgFadedIn = false, skipIntro = false,
+            introSkipped = false, canSkip = true;
 
         public Texture2D _backgroundImg { get; set; }
         //Délai d'apparaition. 1Sec/60fps = 0.016 donc ~2 sec de délai
@@ -47,7 +48,6 @@ namespace Think
 
         public MainMenu()
         {
-            
         }
 
         public void LoadContent(ContentManager Content)
@@ -79,26 +79,21 @@ namespace Think
             #endregion
         }
 
-        //Called just once before Update()
-        public void BeginRun()
+        public void GameIntro(GameTime gameTime)
         {
-            //Menu theme
-            #region Menu theme
-            MediaPlayer.IsRepeating = _themeLooping; //Boucle la musique
-            MediaPlayer.Volume = _themeVolume; //Default 0.45f
-     
-            MediaPlayer.Play(_backgroundTheme);
-            #endregion
-        }
+            //Si clic, on skip l'intro et on passe au fade-in du menu principal
+            if (canSkip && Mouse.GetState().LeftButton == ButtonState.Pressed)
+            {
+                skipIntro = true;
+            }
 
-        public void Update(GameTime gameTime)
-        {
             //Décrémente le délai de fade. gameTime.ElapsedGameTime =
             //intervalle de temps depuis le dernier appel de Update(). 
             //Donc ici, .TotalSeconds renverra 1 seconde / 60 frames = ~ 0.016.
+            //.Seconds renverrait 0 car .Seconds renvoie les secondes en INT. Donc 1, 2, 3..
             _fadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
-            #region FadeIn/Out MG + Menu
-            if (_fadeDelay <= 0) //1 seconde de fade
+ 
+            if (_fadeDelay <= 0 && !skipIntro && !introSkipped)
             {
                 if (!_mgFadedIn) //Si la mention n'est pas apparue
                 {
@@ -120,17 +115,59 @@ namespace Think
                         _mgFadedOut = true; //La mention est terminée
                     }
                 }
-
-                if (_mgFadedOut) //Si la mention est terminée
-                {
-                    //On repasse au blanc pour afficher le Main Menu
-                    _r++; _g++; _b++;
-
-                    //Reset du delay
-                    _fadeDelay = 0.010;
-                }
             }
+
+            if (skipIntro)
+            {
+                _r--; _g--; _b--;
+                
+                if (_r <= 0 && _g <= 0 && _b <= 0)
+                {
+                    _mgFadedOut = true; //Lance l'affichage du menu dans Draw()
+                    skipIntro = false; //Empêche le retour dans ce if()
+                    introSkipped = true; //Empêche le retour dans le premier if() au dessus
+                }            
+            }
+
+            //Si la mention MonoGame est disparue
+            if (_mgFadedOut)
+            {
+                //On augmente la couleur, donc indirectement on affiche le main menu
+                if (_r <= 310 || _g <= 310 || _b <=310)
+                {
+                    _r++; _g++; _b++;
+                }
+
+                //On enlève la possibilité de skip / fade l'écran
+                canSkip = false;
+            }
+        }
+
+        //Called just once before Update()
+        public void BeginRun()
+        {
+            //Menu theme
+            #region Menu theme
+            MediaPlayer.IsRepeating = _themeLooping; //Boucle la musique
+            MediaPlayer.Volume = _themeVolume; //Default 0.45f
+     
+            MediaPlayer.Play(_backgroundTheme);
             #endregion
+        }
+
+        //Limite les valeurs rgb entre -20 et 310.  
+        public void ColorValueLimiter(int colorValue)
+        {
+            if (colorValue <= 0)
+                colorValue = 0;
+            if (colorValue >= 310)
+                colorValue = 310;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            //Introduction (Mention MonoGame + Autres + Main Menu)
+            GameIntro(gameTime);
 
             //Update les boutons de la liste (Pressed, Route, etc.)
             for (int i = 0; i < TitleButton.menuPanel.Count; i++)
@@ -163,7 +200,7 @@ namespace Think
             spriteBatch.DrawString(_debugFontArial, gameTime.ElapsedGameTime.TotalSeconds.ToString(),
                 new Vector2(0, 20), Color.Green);
             spriteBatch.DrawString(_debugFontArial, String.Format("_r: {0}, _g: {1}, _b: {2}", _r, _g, _b),
-                new Vector2(0, 40), Color.Black);
+                new Vector2(0, 40), Color.PaleVioletRed);
             #endregion 
         }
         
