@@ -53,7 +53,14 @@ namespace Think
             {
                 //Si on clique sur le bouton
                 if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    _texture = TexturePressed;
                     btnClicked = true;
+                if (Mouse.GetState().LeftButton == ButtonState.Released)
+                {
+                    _texture = TextureNormal;
+                    //btnClicked = false; A voir, quand le menu correspondant au
+                    //bouton se lancera
+                }
             }
             else //Si le curseur est hors du bouton
             {
@@ -62,15 +69,7 @@ namespace Think
                 buttonState = BtnState.Normal;
 
                 btnClicked = false;
-            }
-
-            //Si on a cliqué sur le bouton
-            if (btnClicked)
-            {
-                //La texture est de type "Pressed"
-                _texture = TexturePressed;
-                buttonState = BtnState.Pressed;
-            }     
+            } 
         }
 
         public virtual void Update(GameTime gameTime)
