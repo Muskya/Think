@@ -22,7 +22,8 @@ namespace Think
         #endregion
 
         #region Propriétés de jeu
-        float screenHeight, screenWidth;
+        public static float screenHeight, screenWidth;
+        public static bool firstSaveCreated = false;
         #endregion
 
         //Références
@@ -85,7 +86,7 @@ namespace Think
 
             //Load le content du main menu
             mainMenu.LoadContent(this.Content);
-            
+
         }
 
         protected override void UnloadContent()
@@ -97,6 +98,7 @@ namespace Think
         protected override void BeginRun()
         {
             mainMenu.BeginRun(); //BeginRun du MainMenu (background fade, theme..)
+            
         }
 
         protected override void Update(GameTime gameTime)

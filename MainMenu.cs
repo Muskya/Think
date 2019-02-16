@@ -29,8 +29,7 @@ namespace Think
         private int _r = 0, _g = 0, _b = 0;
 
         //Panel de boutons
-        List<TitleButton> menuPanel;
-        TitleButton test;
+        TitleButton newBtn, optionsBtn, playBtn;
 
         #endregion
 
@@ -48,8 +47,36 @@ namespace Think
 
         public MainMenu()
         {
-            menuPanel = new List<TitleButton>();
             
+        }
+
+        public void LoadContent(ContentManager Content)
+        {
+            var scrHeight = Main.screenHeight; var scrWidth = Main.screenWidth;
+
+            this._backgroundImg = Content.Load<Texture2D>("menu_background");
+            this._backgroundMG = Content.Load<Texture2D>("monogame_screen");
+            this._backgroundTheme = Content.Load<Song>("menu_theme");
+
+            //Buttons panel instanciation
+            #region GUI
+            playBtn = new
+                TitleButton(new Vector2(scrWidth - scrWidth + 60, scrHeight - scrHeight + 60),
+                Content.Load<Texture2D>("Buttons/playBtnNormal"),
+                Content.Load<Texture2D>("Buttons/playBtnPressed"));
+            newBtn = new
+                TitleButton(new Vector2(playBtn._position.X, playBtn._position.Y + 125),
+                Content.Load<Texture2D>("Buttons/newBtnNormal"),
+                Content.Load<Texture2D>("Buttons/newBtnPressed"));
+            optionsBtn = new
+               TitleButton(new Vector2(playBtn._position.X, newBtn._position.Y + 65),
+               Content.Load<Texture2D>("Buttons/optionsBtnNormal"),
+               Content.Load<Texture2D>("Buttons/optionsBtnPressed"));
+            #endregion
+
+            #region Other
+            this._debugFontArial = Content.Load<SpriteFont>("ariaFont");
+            #endregion
         }
 
         //Called just once before Update()
@@ -62,29 +89,6 @@ namespace Think
      
             MediaPlayer.Play(_backgroundTheme);
             #endregion
-
-            #region Menu background
-
-            #endregion
-
-            #region Menu GUI
-            //Buttons panel initialization
-            menuPanel = new List<Button>();
-            int yPosScaler = 50;
-            for (int i=0;i<3;i++)
-            {
-                //menuPanel.Add(new Button(new Vector2(50, yPosScaler)));
-                yPosScaler += 50;
-            }
-            #endregion
-        }
-
-        public void LoadContent(ContentManager Content)
-        {
-            this._backgroundImg = Content.Load<Texture2D>("menu_background");
-            this._backgroundMG = Content.Load<Texture2D>("monogame_screen");
-            this._backgroundTheme = Content.Load<Song>("menu_theme");
-            this._debugFontArial = Content.Load<SpriteFont>("ariaFont");
         }
 
         public void Update(GameTime gameTime)
@@ -94,7 +98,7 @@ namespace Think
             //Donc ici, .TotalSeconds renverra 1 seconde / 60 frames = ~ 0.016.
             _fadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
             #region FadeIn/Out MG + Menu
-            if (_fadeDelay <= 0) //
+            if (_fadeDelay <= 0) //1 seconde de fade
             {
                 if (!_mgFadedIn) //Si la mention n'est pas apparue
                 {
@@ -128,8 +132,11 @@ namespace Think
             }
             #endregion
 
-            
-
+            //Update les boutons de la liste (Pressed, Route, etc.)
+            for (int i = 0; i < TitleButton.menuPanel.Count; i++)
+            {
+                TitleButton.menuPanel[i].Update(gameTime);
+            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -142,13 +149,12 @@ namespace Think
                 //Affiche le menu mrincipal
                 spriteBatch.Draw(_backgroundImg, Vector2.Zero, new Color(_r, _g, _b));
 
-                //Affichage boutons, options, logos, other...
-                //for (int i = 0; i < 3; i++)
-                //{
-                //    spriteBatch.Draw(menuPanel[i]._texture,
-                //                     menuPanel[i]._position, Color.White);
-                //}
-
+                //Draw tous les boutons de la liste
+                for (int i = 0; i < TitleButton.menuPanel.Count; i++)
+                {
+                    TitleButton.menuPanel[i].Draw(gameTime, spriteBatch);
+                }  
+                    
             }
 
             //Debug stuff

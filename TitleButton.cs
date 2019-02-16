@@ -15,24 +15,25 @@ namespace Think
 {
     class TitleButton : Button
     {
-        public TitleButton(Vector2 btnPos, Texture2D normal, Texture2D hovered,
-               Texture2D pressed)
-            :base(btnPos, normal, hovered, pressed)
+        public static List<TitleButton> menuPanel = new List<TitleButton>();
+
+        public TitleButton(Vector2 btnPos, Texture2D normal, Texture2D pressed)
+            :base(btnPos, normal, pressed)
         {
-            
+            menuPanel.Add(this);
         }
 
-        protected override void BtnStateManager()
+        public override void BtnStateManager()
         {
             base.BtnStateManager();
         }
 
-        protected override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             base.Draw(gameTime, spriteBatch);
         }

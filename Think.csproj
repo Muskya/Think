@@ -46,7 +46,6 @@
     <Compile Include="InputManager.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="MainMenu.cs" />
-    <Compile Include="MainMenuButton.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TitleButton.cs" />
