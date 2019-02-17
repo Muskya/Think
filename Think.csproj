@@ -43,6 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Button.cs" />
+    <Compile Include="GUIMenu.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="MainMenu.cs" />
