@@ -8,5 +8,6 @@ namespace Think
 {
     abstract class GUIMenu
     {
+       
     }
 }

@@ -13,19 +13,20 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Think
 {
-    class TitleButton : Button
+    class MainMenuButton : Button
     {
-        public static List<TitleButton> menuPanel = new List<TitleButton>();
+        public static List<MainMenuButton> menuPanel = new List<MainMenuButton>();
 
-        public TitleButton(Vector2 btnPos, Texture2D normal, Texture2D pressed)
-            :base(btnPos, normal, pressed)
+        public MainMenuButton(Vector2 btnPos, Texture2D normal, Texture2D pressed,
+            SoundEffect clickSound)
+            :base(btnPos, normal, pressed, clickSound)
         {
             menuPanel.Add(this);
         }
 
-        public override void BtnStateManager()
+        public override void ButtonManager()
         {
-            base.BtnStateManager();
+            base.ButtonManager();
         }
 
         public override void Update(GameTime gameTime)

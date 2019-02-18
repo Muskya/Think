@@ -74,6 +74,7 @@ namespace Think
             //Others
             IsMouseVisible = true;
 
+            //Needed for any modification
             graphics.ApplyChanges();
             #endregion
 

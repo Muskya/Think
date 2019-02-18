@@ -30,8 +30,8 @@ namespace Think
         private int _r = 0, _g = 0, _b = 0;
 
         //Panel de boutons
-        TitleButton newBtn, optionsBtn, playBtn;
-
+        MainMenuButton newBtn, optionsBtn, playBtn;
+        private SoundEffect btnClickSound;
         #endregion
 
         //Main Menu Music
@@ -52,26 +52,29 @@ namespace Think
 
         public void LoadContent(ContentManager Content)
         {
+            //Raccourci pour récupérer la hauteur / largeur de l'écran
             var scrHeight = Main.screenHeight; var scrWidth = Main.screenWidth;
 
+            //Load les différentes textures des backgrounds
             this._backgroundImg = Content.Load<Texture2D>("menu_background");
             this._backgroundMG = Content.Load<Texture2D>("monogame_screen");
             this._backgroundTheme = Content.Load<Song>("menu_theme");
 
+            this.btnClickSound = Content.Load<SoundEffect>("important_menu_clicksound");
             //Buttons panel instanciation
             #region GUI
             playBtn = new
-                TitleButton(new Vector2(scrWidth - scrWidth + 60, scrHeight - scrHeight + 60),
+                MainMenuButton(new Vector2(scrWidth - scrWidth + 60, scrHeight - scrHeight + 60),
                 Content.Load<Texture2D>("Buttons/playBtnNormal"),
-                Content.Load<Texture2D>("Buttons/playBtnPressed"));
+                Content.Load<Texture2D>("Buttons/playBtnPressed"), btnClickSound);
             newBtn = new
-                TitleButton(new Vector2(playBtn._position.X, playBtn._position.Y + 125),
+                MainMenuButton(new Vector2(playBtn._position.X, playBtn._position.Y + 125),
                 Content.Load<Texture2D>("Buttons/newBtnNormal"),
-                Content.Load<Texture2D>("Buttons/newBtnPressed"));
+                Content.Load<Texture2D>("Buttons/newBtnPressed"), btnClickSound);
             optionsBtn = new
-               TitleButton(new Vector2(playBtn._position.X, newBtn._position.Y + 65),
+               MainMenuButton(new Vector2(playBtn._position.X, newBtn._position.Y + 65),
                Content.Load<Texture2D>("Buttons/optionsBtnNormal"),
-               Content.Load<Texture2D>("Buttons/optionsBtnPressed"));
+               Content.Load<Texture2D>("Buttons/optionsBtnPressed"), btnClickSound);
             #endregion
 
             #region Other
@@ -79,6 +82,8 @@ namespace Think
             #endregion
         }
 
+        //Gère l'introduction du jeu. (Mentions outils / autres
+        //jusqu'à l'affiche du main menu, des boutons, des animations, etc.
         public void GameIntro(GameTime gameTime)
         {
             //Si clic, on skip l'intro et on passe au fade-in du menu principal
@@ -156,6 +161,7 @@ namespace Think
         }
 
         //Limite les valeurs rgb entre -20 et 310.  
+        //Non utilisé pour l'instant.
         public void ColorValueLimiter(int colorValue)
         {
             if (colorValue <= 0)
@@ -170,9 +176,9 @@ namespace Think
             GameIntro(gameTime);
 
             //Update les boutons de la liste (Pressed, Route, etc.)
-            for (int i = 0; i < TitleButton.menuPanel.Count; i++)
+            for (int i = 0; i < MainMenuButton.menuPanel.Count; i++)
             {
-                TitleButton.menuPanel[i].Update(gameTime);
+                MainMenuButton.menuPanel[i].Update(gameTime);
             }
         }
 
@@ -187,9 +193,9 @@ namespace Think
                 spriteBatch.Draw(_backgroundImg, Vector2.Zero, new Color(_r, _g, _b));
 
                 //Draw tous les boutons de la liste
-                for (int i = 0; i < TitleButton.menuPanel.Count; i++)
+                for (int i = 0; i < MainMenuButton.menuPanel.Count; i++)
                 {
-                    TitleButton.menuPanel[i].Draw(gameTime, spriteBatch);
+                    MainMenuButton.menuPanel[i].Draw(gameTime, spriteBatch);
                 }  
                     
             }
