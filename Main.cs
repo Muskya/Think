@@ -28,6 +28,7 @@ namespace Think
 
         //Références
         MainMenu mainMenu;
+        Level levelOne;
 
         //Game States (more to come ?)
         GameState gameState;
@@ -44,6 +45,7 @@ namespace Think
 
             //Class references
             mainMenu = new MainMenu();
+            levelOne = new LevelOne();
             
             //Content related stuff
             Content.RootDirectory = "Content";
@@ -87,6 +89,10 @@ namespace Think
 
             //Load le content du main menu
             mainMenu.LoadContent(this.Content);
+
+            //Load le content des levels
+
+            
 
         }
 

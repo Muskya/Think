@@ -28,6 +28,11 @@ namespace Think
         //Panel de boutons
         MainMenuButton loadBtn, optionsBtn, playBtn;
         private SoundEffect btnClickSound;
+
+        //Autres menus
+        //Menus déclarés en tant que GUIMenu pour regrouper les types,
+        //mais initialisés en tant que leur classe respective.
+        GUIMenu newgameMenu, loadgameMenu, optionsMenu;
         #endregion
 
         //Main Menu Music
@@ -50,6 +55,8 @@ namespace Think
         //appel dans Main.Cs
         public void LoadContent(ContentManager Content)
         {
+            
+
             //Raccourci pour récupérer la hauteur / largeur de l'écran
             var scrHeight = Main.screenHeight; var scrWidth = Main.screenWidth;
 

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
@@ -15,7 +14,39 @@ namespace Think
 {
     abstract class GUIMenu
     {
+        //Graphics
         private Texture2D _menuBackground;
+
+        //SFX
+        private SoundEffect _menuOpeningSound, _menuClosingSound, _menuSlidingSound;
         
+        public GUIMenu(Texture2D bg, SoundEffect opSound, SoundEffect cloSound, 
+            SoundEffect sliSound)
+        {
+            //Attribution du background du menu (à priori le même pendant tout
+            //le long du jeu (black sand))
+            this._menuBackground = bg;
+
+            //Attribution des SFX
+            this._menuOpeningSound = opSound;
+            this._menuClosingSound = cloSound;
+            this._menuSlidingSound = sliSound;
+
+        }
+
+        //Les méthodes de XNA (Load, Update, Draw etc) doivent toujours être en public. Si je veux les mettre
+        //en protected parce-que j'ai une classe fille de GUIMenu, je pourrai pas dans une autre
+        //classe utiliser cette méthode sur une instance de la classe mère ou fille.
+        //Sachant que ça arrive tout le temps d'appeler les Update() et Draw() de l'instance
+        //d'une classe depuis d'autres classes, je dois les laisser en public.
+        public virtual void Update(GameTime gameTime)
+        {
+
+        }
+
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            
+        }
     }
 }
