@@ -202,7 +202,7 @@ namespace Think
                 //Draw tous les boutons de la liste
                 for (int i = 0; i < MainMenuButton.menuPanel.Count; i++)
                 {
-                    MainMenuButton.menuPanel[i].DrawFadeIn(gameTime, spriteBatch, _r, _g, _b);
+                    MainMenuButton.menuPanel[i].DrawFade(gameTime, spriteBatch, _r, _g, _b);
                 }  
                     
             }
