@@ -39,9 +39,9 @@ namespace Think
             base.Draw(gameTime, spriteBatch);
         }
 
-        public override void DrawFadeIn(GameTime gameTime, SpriteBatch spriteBatch, int r, int g, int b)
+        public override void DrawFade(GameTime gameTime, SpriteBatch spriteBatch, int r, int g, int b)
         {
-            base.DrawFadeIn(gameTime, spriteBatch, r, g, b);
+            base.DrawFade(gameTime, spriteBatch, r, g, b);
         }
 
     }
