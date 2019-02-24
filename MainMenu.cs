@@ -30,7 +30,7 @@ namespace Think
         private int _r = 0, _g = 0, _b = 0;
 
         //Panel de boutons
-        MainMenuButton newBtn, optionsBtn, playBtn;
+        MainMenuButton loadBtn, optionsBtn, playBtn;
         private SoundEffect btnClickSound;
         #endregion
 
@@ -65,16 +65,16 @@ namespace Think
             #region GUI
             playBtn = new
                 MainMenuButton(new Vector2(scrWidth - scrWidth + 60, scrHeight - scrHeight + 60),
-                Content.Load<Texture2D>("Buttons/playBtnNormal"),
-                Content.Load<Texture2D>("Buttons/playBtnPressed"), btnClickSound);
-            newBtn = new
+                Content.Load<Texture2D>("Buttons/playBtnNormal2"),
+                Content.Load<Texture2D>("Buttons/playBtnPressed2"), btnClickSound);
+            loadBtn = new
                 MainMenuButton(new Vector2(playBtn._position.X, playBtn._position.Y + 125),
-                Content.Load<Texture2D>("Buttons/newBtnNormal"),
-                Content.Load<Texture2D>("Buttons/newBtnPressed"), btnClickSound);
+                Content.Load<Texture2D>("Buttons/loadBtnNormal2"),
+                Content.Load<Texture2D>("Buttons/loadBtnPressed2"), btnClickSound);
             optionsBtn = new
-               MainMenuButton(new Vector2(playBtn._position.X, newBtn._position.Y + 65),
-               Content.Load<Texture2D>("Buttons/optionsBtnNormal"),
-               Content.Load<Texture2D>("Buttons/optionsBtnPressed"), btnClickSound);
+               MainMenuButton(new Vector2(playBtn._position.X, loadBtn._position.Y + 65),
+               Content.Load<Texture2D>("Buttons/optionsBtnNormal2"),
+               Content.Load<Texture2D>("Buttons/optionsBtnPressed2"), btnClickSound);
             #endregion
 
             #region Other
@@ -98,6 +98,8 @@ namespace Think
             //.Seconds renverrait 0 car .Seconds renvoie les secondes en INT. Donc 1, 2, 3..
             _fadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
  
+            //Si on est en train de fade (<= 0 en gros), qu'on a pas cliqué pour 
+            //skip l'intro et que l'intro est déjà passée (évite le retour dans ce if)
             if (_fadeDelay <= 0 && !skipIntro && !introSkipped)
             {
                 if (!_mgFadedIn) //Si la mention n'est pas apparue
@@ -106,7 +108,11 @@ namespace Think
                     _r++; _g++; _b++;
 
                     if (_r >= 310 && _g >= 310 && _b >= 310)
+                    {
                         _mgFadedIn = true;
+                        _fadeDelay = 0.020;
+                    }
+                        
                 }
 
                 if (_mgFadedIn) //Si la mention est apparue
@@ -122,6 +128,7 @@ namespace Think
                 }
             }
 
+            //Si on a cliqué pour skip l'intro
             if (skipIntro)
             {
                 _r--; _g--; _b--;
@@ -135,7 +142,7 @@ namespace Think
             }
 
             //Si la mention MonoGame est disparue
-            if (_mgFadedOut)
+            if (_mgFadedOut) //Lance l'apparition du main menu
             {
                 //On augmente la couleur, donc indirectement on affiche le main menu
                 if (_r <= 310 || _g <= 310 || _b <=310)
@@ -195,7 +202,7 @@ namespace Think
                 //Draw tous les boutons de la liste
                 for (int i = 0; i < MainMenuButton.menuPanel.Count; i++)
                 {
-                    MainMenuButton.menuPanel[i].Draw(gameTime, spriteBatch);
+                    MainMenuButton.menuPanel[i].DrawFadeIn(gameTime, spriteBatch, _r, _g, _b);
                 }  
                     
             }

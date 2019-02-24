@@ -96,5 +96,19 @@ namespace Think
         {
             spriteBatch.Draw(_texture, _position, Color.White);
         }
+
+        //Pas de fade-in / fade-out. C'est géré par l'environnement dans lequel cette méthode
+        //est appelée, et donc par les r,g,b passés en paramètres.
+        public virtual void DrawFade(GameTime gameTime, SpriteBatch spriteBatch, int r, int g, int b)
+        {
+            double fadeDelay = 0.010;
+            fadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (fadeDelay <= 0)
+            {
+                spriteBatch.Draw(_texture, _position, new Color(r, g, b));
+            }
+        }
+
     }
 }
