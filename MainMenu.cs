@@ -6,10 +6,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Think
 {
@@ -50,35 +46,37 @@ namespace Think
         {
         }
 
+        //LoadContent, contentManager du programme passé en paramètre lors de son
+        //appel dans Main.Cs
         public void LoadContent(ContentManager Content)
         {
             //Raccourci pour récupérer la hauteur / largeur de l'écran
             var scrHeight = Main.screenHeight; var scrWidth = Main.screenWidth;
 
             //Load les différentes textures des backgrounds
-            this._backgroundImg = Content.Load<Texture2D>("menu_background");
-            this._backgroundMG = Content.Load<Texture2D>("monogame_screen");
-            this._backgroundTheme = Content.Load<Song>("menu_theme");
+            this._backgroundImg = Content.Load<Texture2D>("Graphics/menu_background");
+            this._backgroundMG = Content.Load<Texture2D>("Graphics/monogame_screen");
+            this._backgroundTheme = Content.Load<Song>("Music/menu_theme");
 
-            this.btnClickSound = Content.Load<SoundEffect>("important_menu_clicksound");
+            this.btnClickSound = Content.Load<SoundEffect>("SFX/important_menu_clicksound");
             //Buttons panel instanciation
             #region GUI
             playBtn = new
                 MainMenuButton(new Vector2(scrWidth - scrWidth + 60, scrHeight - scrHeight + 60),
-                Content.Load<Texture2D>("Buttons/playBtnNormal2"),
-                Content.Load<Texture2D>("Buttons/playBtnPressed2"), btnClickSound);
+                Content.Load<Texture2D>("Graphics/Buttons/playBtnNormal2"),
+                Content.Load<Texture2D>("Graphics/Buttons/playBtnPressed2"), btnClickSound);
             loadBtn = new
                 MainMenuButton(new Vector2(playBtn._position.X, playBtn._position.Y + 125),
-                Content.Load<Texture2D>("Buttons/loadBtnNormal2"),
-                Content.Load<Texture2D>("Buttons/loadBtnPressed2"), btnClickSound);
+                Content.Load<Texture2D>("Graphics/Buttons/loadBtnNormal2"),
+                Content.Load<Texture2D>("Graphics/Buttons/loadBtnPressed2"), btnClickSound);
             optionsBtn = new
                MainMenuButton(new Vector2(playBtn._position.X, loadBtn._position.Y + 65),
-               Content.Load<Texture2D>("Buttons/optionsBtnNormal2"),
-               Content.Load<Texture2D>("Buttons/optionsBtnPressed2"), btnClickSound);
+               Content.Load<Texture2D>("Graphics/Buttons/optionsBtnNormal2"),
+               Content.Load<Texture2D>("Graphics/Buttons/optionsBtnPressed2"), btnClickSound);
             #endregion
 
             #region Other
-            this._debugFontArial = Content.Load<SpriteFont>("ariaFont");
+            this._debugFontArial = Content.Load<SpriteFont>("Other/ariaFont");
             #endregion
         }
 
@@ -96,7 +94,11 @@ namespace Think
             //intervalle de temps depuis le dernier appel de Update(). 
             //Donc ici, .TotalSeconds renverra 1 seconde / 60 frames = ~ 0.016.
             //.Seconds renverrait 0 car .Seconds renvoie les secondes en INT. Donc 1, 2, 3..
-            _fadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
+            if (!_mgFadedOut)
+            {
+                _fadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
+            }
+                
  
             //Si on est en train de fade (<= 0 en gros), qu'on a pas cliqué pour 
             //skip l'intro et que l'intro est déjà passée (évite le retour dans ce if)
@@ -155,7 +157,7 @@ namespace Think
             }
         }
 
-        //Called just once before Update()
+        //Called once just before Update()
         public void BeginRun()
         {
             //Menu theme
