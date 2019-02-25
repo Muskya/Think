@@ -14,9 +14,9 @@ namespace Think
     {
         public static List<MainMenuButton> menuPanel = new List<MainMenuButton>();
 
-        public MainMenuButton(Vector2 btnPos, Texture2D normal, Texture2D pressed,
+        public MainMenuButton(string name, Vector2 btnPos, Texture2D normal, Texture2D pressed,
             SoundEffect clickSound)
-            :base(btnPos, normal, pressed, clickSound)
+            :base(name, btnPos, normal, pressed, clickSound)
         {
             menuPanel.Add(this);
         }
@@ -29,6 +29,16 @@ namespace Think
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            if (this.btnClicked)
+            {
+                switch (this._buttonName)
+                {
+                    case "playbtn":
+
+                }
+            }
+            
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

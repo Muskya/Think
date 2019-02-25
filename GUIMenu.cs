@@ -19,18 +19,27 @@ namespace Think
 
         //SFX
         private SoundEffect _menuOpeningSound, _menuClosingSound, _menuSlidingSound;
-        
-        public GUIMenu(Texture2D bg, SoundEffect opSound, SoundEffect cloSound, 
-            SoundEffect sliSound)
-        {
-            //Attribution du background du menu (à priori le même pendant tout
-            //le long du jeu (black sand))
-            this._menuBackground = bg;
 
-            //Attribution des SFX
-            this._menuOpeningSound = opSound;
-            this._menuClosingSound = cloSound;
-            this._menuSlidingSound = sliSound;
+        public bool isDisplayed = false;
+        
+        public GUIMenu()
+        {
+            
+        }
+
+        //Load le content du menu de base. 
+        public virtual void LoadContent(ContentManager Content)
+        {
+            this._menuBackground = Content.Load<Texture2D>("Graphics/menu_background");
+
+            this._menuOpeningSound = Content.Load<SoundEffect>("SFX/gui_menu_opening_1");
+            this._menuClosingSound = Content.Load<SoundEffect>("SFX/gui_menu_closing_1");
+            this._menuSlidingSound = Content.Load<SoundEffect>("SFX/gui_menu_sliding_1");
+        }
+
+        //A élaborer
+        protected virtual void SwitchMenu()
+        {
 
         }
 
@@ -46,7 +55,7 @@ namespace Think
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            
+            spriteBatch.Draw(this._menuBackground, Vector2.Zero, Color.White);
         }
     }
 }

@@ -55,8 +55,6 @@ namespace Think
         //appel dans Main.Cs
         public void LoadContent(ContentManager Content)
         {
-            
-
             //Raccourci pour récupérer la hauteur / largeur de l'écran
             var scrHeight = Main.screenHeight; var scrWidth = Main.screenWidth;
 
@@ -69,15 +67,15 @@ namespace Think
             //Buttons panel instanciation
             #region GUI
             playBtn = new
-                MainMenuButton(new Vector2(scrWidth - scrWidth + 60, scrHeight - scrHeight + 60),
+                MainMenuButton("playbtn", new Vector2(scrWidth - scrWidth + 60, scrHeight - scrHeight + 60),
                 Content.Load<Texture2D>("Graphics/Buttons/playBtnNormal2"),
                 Content.Load<Texture2D>("Graphics/Buttons/playBtnPressed2"), btnClickSound);
             loadBtn = new
-                MainMenuButton(new Vector2(playBtn._position.X, playBtn._position.Y + 125),
+                MainMenuButton("loadbtn", new Vector2(playBtn._position.X, playBtn._position.Y + 125),
                 Content.Load<Texture2D>("Graphics/Buttons/loadBtnNormal2"),
                 Content.Load<Texture2D>("Graphics/Buttons/loadBtnPressed2"), btnClickSound);
             optionsBtn = new
-               MainMenuButton(new Vector2(playBtn._position.X, loadBtn._position.Y + 65),
+               MainMenuButton("optionsbtn", new Vector2(playBtn._position.X, loadBtn._position.Y + 65),
                Content.Load<Texture2D>("Graphics/Buttons/optionsBtnNormal2"),
                Content.Load<Texture2D>("Graphics/Buttons/optionsBtnPressed2"), btnClickSound);
             #endregion
@@ -213,7 +211,6 @@ namespace Think
                 {
                     MainMenuButton.menuPanel[i].DrawFade(gameTime, spriteBatch, _r, _g, _b);
                 }  
-                    
             }
 
             //Debug stuff

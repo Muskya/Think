@@ -28,6 +28,7 @@ namespace Think
 
         //Références
         MainMenu mainMenu;
+        static GUIMenu optionsMenu; //En GUIMenu pour regrouper les types
         Level levelOne;
 
         //Game States (more to come ?)
@@ -45,6 +46,7 @@ namespace Think
 
             //Class references
             mainMenu = new MainMenu();
+            optionsMenu = new OptionsMenu();
             levelOne = new LevelOne();
             
             //Content related stuff
@@ -80,6 +82,8 @@ namespace Think
             graphics.ApplyChanges();
             #endregion
 
+            //Menus
+
             base.Initialize();
         }
 
@@ -89,6 +93,9 @@ namespace Think
 
             //Load le content du main menu
             mainMenu.LoadContent(this.Content);
+
+            //Load le content des menus du jeu
+            optionsMenu.LoadContent(this.Content);
 
             //Load le content des levels
 
@@ -126,6 +133,7 @@ namespace Think
 
             //Draw le MainMenu. (Mention Monogame + Title Screen)
             mainMenu.Draw(gameTime, spriteBatch);
+            
 
             spriteBatch.End();
 

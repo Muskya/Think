@@ -13,22 +13,26 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Think
 {
-    class OptionsMenu : GUIMenu
+    sealed class OptionsMenu : GUIMenu
     {
-
-
-        public OptionsMenu(Texture2D bg, SoundEffect[] sounds)
-            : base(bg, sounds)
+        public OptionsMenu()
         {
 
         }
 
-        public override void Update(GameTime gameTime)
+        public sealed override void LoadContent(ContentManager Content)
+        {
+            base.LoadContent(Content); //Load les éléments de base d'un GUIMenu
+            
+            //Load les éléments spécifiques au menu d'options
+        }
+
+        public sealed override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public sealed override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             base.Draw(gameTime, spriteBatch);
         }

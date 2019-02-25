@@ -12,7 +12,10 @@ using Microsoft.Xna.Framework.Media;
 namespace Think
 {
     abstract class Button
-    {   
+    {
+        //Permet les actions sous condition (si le bouton est le bouton options.. etc)
+        public string _buttonName;
+
         public Texture2D TextureNormal{ get; set; }
         public Texture2D TexturePressed { get; set; }
 
@@ -31,9 +34,8 @@ namespace Think
             Normal,
             Pressed
         }
-        BtnState buttonState = BtnState.Normal;
 
-        public Button(Vector2 btnPos, Texture2D normal, Texture2D pressed,
+        public Button(string name, Vector2 btnPos, Texture2D normal, Texture2D pressed,
             SoundEffect clickSound)
         {
             //Attribution des paramètres aux propriétés
@@ -79,8 +81,6 @@ namespace Think
             {
                 //La texture est de type "normal"
                 _texture = TextureNormal;
-                buttonState = BtnState.Normal;
-
                 btnClicked = false;
             } 
         }
