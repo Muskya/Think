@@ -13,9 +13,9 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Think
 {
-    sealed class OptionsMenu : GUIMenu
+    sealed class LoadMenu : GUIMenu
     {
-        public OptionsMenu()
+        public LoadMenu()
         {
 
         }
@@ -23,8 +23,8 @@ namespace Think
         public sealed override void LoadContent(ContentManager Content)
         {
             base.LoadContent(Content); //Load les éléments de base d'un GUIMenu
-            
-            //Load les éléments spécifiques au menu d'options
+
+            //Load les éléments spécifiques au menu de loading
         }
 
         public sealed override void Update(GameTime gameTime)

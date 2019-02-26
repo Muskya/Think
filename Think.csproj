@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Button.cs" />
     <Compile Include="GUIMenu.cs" />
+    <Compile Include="LoadMenu.cs" />
+    <Compile Include="PlayMenu.cs" />
     <Compile Include="RandomManager.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="LevelOne.cs" />

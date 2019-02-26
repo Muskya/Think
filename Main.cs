@@ -94,13 +94,6 @@ namespace Think
             //Load le content du main menu
             mainMenu.LoadContent(this.Content);
 
-            //Load le content des menus du jeu
-            
-
-            //Load le content des levels
-
-            
-
         }
 
         protected override void UnloadContent()

@@ -32,7 +32,7 @@ namespace Think
         //Autres menus
         //Menus déclarés en tant que GUIMenu pour regrouper les types,
         //mais initialisés en tant que leur classe respective.
-        GUIMenu optionsMenu;
+        GUIMenu optionsMenu, playMenu, loadMenu;
         #endregion
 
         //Main Menu Music
@@ -50,6 +50,8 @@ namespace Think
         public MainMenu()
         {
             optionsMenu = new OptionsMenu();
+            playMenu = new PlayMenu();
+            loadMenu = new LoadMenu();
         }
 
         //LoadContent, contentManager du programme passé en paramètre lors de son
@@ -85,7 +87,11 @@ namespace Think
             _debugFontArial = Content.Load<SpriteFont>("Other/ariaFont");
             #endregion
 
+            //Load le content des différents menus accessibles depuis
+            //le menu principal
             optionsMenu.LoadContent(Content);
+            loadMenu.LoadContent(Content);
+            playMenu.LoadContent(Content);
         }
 
         //Gère l'introduction du jeu. (Mentions outils / autres
@@ -174,6 +180,8 @@ namespace Think
             MediaPlayer.Volume = _themeVolume; //Default 0.45f
      
             MediaPlayer.Play(_backgroundTheme);
+
+
             #endregion
         }
 
@@ -198,19 +206,25 @@ namespace Think
                 //Update de chaque bouton (gère textures, états, booléens etc)
                 MainMenuButton.menuPanel[i].Update(gameTime);
 
-                //Si le bouton est cliqué
+                //Si le bouton est cliqué (lance le menu approprié)
                 if (MainMenuButton.menuPanel[i].btnClicked == true)
                 {
+                    //Si le bouton est le bouton de nom ...
                     switch (MainMenuButton.menuPanel[i].ButtonName)
                     {
+                        //Si c'est bouton play, on lance la musique d'ouverture
+                        //de menu et on affiche le menu
                         case "playbtn":
-                            //playMenu.isDisplayed = true;
+                            optionsMenu._openingInstance.Play();
+                            playMenu.isOpened = true;
                             break;
                         case "loadbtn":
-                            //loadMenu.isDisplayed = true;
+                            optionsMenu._openingInstance.Play();
+                            loadMenu.isOpened = true;
                             break;
                         case "optionsbtn":
-                            optionsMenu.isDisplayed = true;
+                            optionsMenu._openingInstance.Play();
+                            optionsMenu.isOpened = true;
                             break;
                     }
                     
@@ -234,11 +248,20 @@ namespace Think
                     MainMenuButton.menuPanel[i].DrawFade(gameTime, spriteBatch, _r, _g, _b);
                 }
 
-                if (optionsMenu.isDisplayed == true)
+                //Affiche les différents menus en fonction de celui qui a été ouvert
+                //suite à un clic (Update() de cette classe)
+                if (optionsMenu.isOpened == true)
                 {
                     optionsMenu.Draw(gameTime, spriteBatch);
+                } else if (loadMenu.isOpened == true)
+                {
+                    loadMenu.Draw(gameTime, spriteBatch);
                 }
-                
+                else if (playMenu.isOpened == true)
+                {
+                    playMenu.Draw(gameTime, spriteBatch);
+                }
+
             }
 
             //Debug stuff
@@ -248,7 +271,6 @@ namespace Think
                 new Vector2(0, 20), Color.Green);
             spriteBatch.DrawString(_debugFontArial, String.Format("_r: {0}, _g: {1}, _b: {2}", _r, _g, _b),
                 new Vector2(0, 40), Color.PaleVioletRed);
-
             #endregion 
         }
         

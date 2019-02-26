@@ -59,11 +59,13 @@ namespace Think
                 {
                     _texture = TexturePressed;
                     btnClicked = true;
+                    _clickSoundInstance.Volume = 0.55f;
                     _clickSoundInstance.Play();
                 }
                 if (Mouse.GetState().LeftButton == ButtonState.Released)
                 {
                     _texture = TextureNormal;
+                    btnClicked = false;
                 }
             }
             else //Si le curseur est hors du bouton

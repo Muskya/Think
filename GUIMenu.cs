@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Input;
 
 namespace Think
 {
@@ -20,13 +21,12 @@ namespace Think
 
         //SFX
         private SoundEffect _menuOpeningSound, _menuClosingSound, _menuSlidingSound;
-        private SoundEffectInstance _openingInstance, _closingInstance, _slidingInstance;
-
-        public bool isDisplayed = false;
+        public SoundEffectInstance _openingInstance, _closingInstance, _slidingInstance;
+        public bool isOpening = false, isOpened = false;
         
         public GUIMenu()
         {
-            
+
         }
 
         //Load le content du menu de base. 
@@ -65,11 +65,18 @@ namespace Think
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (isDisplayed)
+            spriteBatch.Draw(_menuBackground, _menuBackgroundPosition, Color.White);
+        }
+
+        public virtual void DrawFade(GameTime gameTime, SpriteBatch spriteBatch, int r, int g, int b)
+        {
+            double fadeDelay = 0.010;
+            fadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (fadeDelay <= 0)
             {
-                spriteBatch.Draw(_menuBackground, _menuBackgroundPosition, Color.White);
+                spriteBatch.Draw(_menuBackground, _menuBackgroundPosition, new Color(r, g, b));
             }
-            
         }
     }
 }
