@@ -200,7 +200,7 @@ namespace Think
             //Introduction (Mention MonoGame + Autres + Main Menu)
             GameIntro(gameTime);
 
-            //Update les boutons de la liste
+            //Update les boutons du menu principal (Play, Load, Options)
             for (int i = 0; i < MainMenuButton.menuPanel.Count; i++)
             {
                 //Update de chaque bouton (gère textures, états, booléens etc)
@@ -229,7 +229,21 @@ namespace Think
                     }
                     
                 }
-            } 
+            }
+
+            //Update les différents menus annexes au menu principal
+            if (optionsMenu.isOpened == true)
+            {
+                optionsMenu.Update(gameTime);
+            }
+            else if (loadMenu.isOpened == true)
+            {
+                loadMenu.Update(gameTime);
+            }
+            else if (playMenu.isOpened == true)
+            {
+                playMenu.Update(gameTime);
+            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)

@@ -12,7 +12,7 @@ namespace Think
         //Permettra d'utiliser des Input relatifs à toutes
         //les classes avec RandomManager.AltF4Pressed() par exemple...
 
-        public static Vector2 CenterTextureOnScreen(Texture2D texture, ref Vector2 pos)
+        public static Vector2 CenterElementOnScreen(Texture2D texture, ref Vector2 pos)
         {
             pos.X = (Main.screenWidth - texture.Width) / 2;
             pos.Y = (Main.screenHeight - texture.Height) / 2;

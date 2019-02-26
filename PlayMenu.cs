@@ -24,7 +24,8 @@ namespace Think
         {
             base.LoadContent(Content); //Load les éléments de base d'un GUIMenu
 
-            //Load les éléments spécifiques au menu play
+            //Load les éléments spécifiques au menu d'options
+            //(En général les boutons spécifiques à chaque nouveau menu
         }
 
         public sealed override void Update(GameTime gameTime)
