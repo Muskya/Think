@@ -14,7 +14,8 @@ namespace Think
     abstract class Button
     {
         //Permet les actions sous condition (si le bouton est le bouton options.. etc)
-        public string _buttonName;
+        public string ButtonName { get; set; }
+        public bool btnClicked = false; //Permet les transitions texturales / affichage menus
 
         public Texture2D TextureNormal{ get; set; }
         public Texture2D TexturePressed { get; set; }
@@ -27,18 +28,11 @@ namespace Think
         //Gère l'instance du son. Permet de jouer le son de A à Z.
         private SoundEffectInstance _clickSoundInstance;
 
-        public bool btnClicked = false; //Permet les transitions texturales
-
-        enum BtnState
-        {
-            Normal,
-            Pressed
-        }
-
         public Button(string name, Vector2 btnPos, Texture2D normal, Texture2D pressed,
             SoundEffect clickSound)
         {
             //Attribution des paramètres aux propriétés
+            this.ButtonName = name;
             this._position = btnPos;
             this.TextureNormal = normal;
             this.TexturePressed = pressed;
@@ -55,10 +49,7 @@ namespace Think
             _clickSoundInstance = _clickSound.CreateInstance();
         }
 
-        //Gère tout sur le bouton. Cela aurait pu être écrit dans 
-        //le Update() tout est regroupé dans une méthode pour plus de
-        //clarté dans le Update().
-        public virtual void ButtonManager()
+        public virtual void Update(GameTime gameTime)
         {
             //Si le curseur est sur le bouton
             if (_rectangle.Contains(Mouse.GetState().X, Mouse.GetState().Y))
@@ -68,26 +59,18 @@ namespace Think
                 {
                     _texture = TexturePressed;
                     btnClicked = true;
-                    //_clickSoundInstance.Volume = 0.5f | Lower volume ?
                     _clickSoundInstance.Play();
-                } 
+                }
                 if (Mouse.GetState().LeftButton == ButtonState.Released)
                 {
                     _texture = TextureNormal;
-                    btnClicked = false;
                 }
             }
             else //Si le curseur est hors du bouton
             {
                 //La texture est de type "normal"
                 _texture = TextureNormal;
-                btnClicked = false;
-            } 
-        }
-
-        public virtual void Update(GameTime gameTime)
-        {
-            ButtonManager();          
+            }
         }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)

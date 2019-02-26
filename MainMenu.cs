@@ -26,13 +26,13 @@ namespace Think
         private int _r = 0, _g = 0, _b = 0;
 
         //Panel de boutons
-        MainMenuButton loadBtn, optionsBtn, playBtn;
+        MainMenuButton loadButton, optionsButton, playButton;
         private SoundEffect btnClickSound;
 
         //Autres menus
         //Menus déclarés en tant que GUIMenu pour regrouper les types,
         //mais initialisés en tant que leur classe respective.
-        GUIMenu newgameMenu, loadgameMenu, optionsMenu;
+        GUIMenu optionsMenu;
         #endregion
 
         //Main Menu Music
@@ -44,11 +44,12 @@ namespace Think
 
         //Internal
         #region Internal
-        public SpriteFont _debugFontArial { get; set; }
+        public static SpriteFont _debugFontArial { get; set; }
         #endregion
 
         public MainMenu()
         {
+            optionsMenu = new OptionsMenu();
         }
 
         //LoadContent, contentManager du programme passé en paramètre lors de son
@@ -66,23 +67,25 @@ namespace Think
             this.btnClickSound = Content.Load<SoundEffect>("SFX/important_menu_clicksound");
             //Buttons panel instanciation
             #region GUI
-            playBtn = new
+            playButton = new
                 MainMenuButton("playbtn", new Vector2(scrWidth - scrWidth + 60, scrHeight - scrHeight + 60),
                 Content.Load<Texture2D>("Graphics/Buttons/playBtnNormal2"),
                 Content.Load<Texture2D>("Graphics/Buttons/playBtnPressed2"), btnClickSound);
-            loadBtn = new
-                MainMenuButton("loadbtn", new Vector2(playBtn._position.X, playBtn._position.Y + 125),
+            loadButton = new
+                MainMenuButton("loadbtn", new Vector2(playButton._position.X, playButton._position.Y + 125),
                 Content.Load<Texture2D>("Graphics/Buttons/loadBtnNormal2"),
                 Content.Load<Texture2D>("Graphics/Buttons/loadBtnPressed2"), btnClickSound);
-            optionsBtn = new
-               MainMenuButton("optionsbtn", new Vector2(playBtn._position.X, loadBtn._position.Y + 65),
+            optionsButton = new
+               MainMenuButton("optionsbtn", new Vector2(playButton._position.X, loadButton._position.Y + 65),
                Content.Load<Texture2D>("Graphics/Buttons/optionsBtnNormal2"),
                Content.Load<Texture2D>("Graphics/Buttons/optionsBtnPressed2"), btnClickSound);
             #endregion
 
             #region Other
-            this._debugFontArial = Content.Load<SpriteFont>("Other/ariaFont");
+            _debugFontArial = Content.Load<SpriteFont>("Other/ariaFont");
             #endregion
+
+            optionsMenu.LoadContent(Content);
         }
 
         //Gère l'introduction du jeu. (Mentions outils / autres
@@ -189,11 +192,30 @@ namespace Think
             //Introduction (Mention MonoGame + Autres + Main Menu)
             GameIntro(gameTime);
 
-            //Update les boutons de la liste (Pressed, Route, etc.)
+            //Update les boutons de la liste
             for (int i = 0; i < MainMenuButton.menuPanel.Count; i++)
             {
+                //Update de chaque bouton (gère textures, états, booléens etc)
                 MainMenuButton.menuPanel[i].Update(gameTime);
-            }
+
+                //Si le bouton est cliqué
+                if (MainMenuButton.menuPanel[i].btnClicked == true)
+                {
+                    switch (MainMenuButton.menuPanel[i].ButtonName)
+                    {
+                        case "playbtn":
+                            //playMenu.isDisplayed = true;
+                            break;
+                        case "loadbtn":
+                            //loadMenu.isDisplayed = true;
+                            break;
+                        case "optionsbtn":
+                            optionsMenu.isDisplayed = true;
+                            break;
+                    }
+                    
+                }
+            } 
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -206,11 +228,17 @@ namespace Think
                 //Affiche le menu mrincipal
                 spriteBatch.Draw(_backgroundImg, Vector2.Zero, new Color(_r, _g, _b));
 
-                //Draw tous les boutons de la liste
+                //Affiche tous les boutons de la liste
                 for (int i = 0; i < MainMenuButton.menuPanel.Count; i++)
                 {
                     MainMenuButton.menuPanel[i].DrawFade(gameTime, spriteBatch, _r, _g, _b);
-                }  
+                }
+
+                if (optionsMenu.isDisplayed == true)
+                {
+                    optionsMenu.Draw(gameTime, spriteBatch);
+                }
+                
             }
 
             //Debug stuff
@@ -220,6 +248,7 @@ namespace Think
                 new Vector2(0, 20), Color.Green);
             spriteBatch.DrawString(_debugFontArial, String.Format("_r: {0}, _g: {1}, _b: {2}", _r, _g, _b),
                 new Vector2(0, 40), Color.PaleVioletRed);
+
             #endregion 
         }
         

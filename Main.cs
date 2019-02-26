@@ -28,7 +28,7 @@ namespace Think
 
         //Références
         MainMenu mainMenu;
-        static GUIMenu optionsMenu; //En GUIMenu pour regrouper les types
+        GUIMenu optionsMenu; //En GUIMenu pour regrouper les types
         Level levelOne;
 
         //Game States (more to come ?)
@@ -95,7 +95,7 @@ namespace Think
             mainMenu.LoadContent(this.Content);
 
             //Load le content des menus du jeu
-            optionsMenu.LoadContent(this.Content);
+            
 
             //Load le content des levels
 

@@ -21,29 +21,17 @@ namespace Think
             menuPanel.Add(this);
         }
 
-        public override void ButtonManager()
-        {
-            base.ButtonManager();
-        }
-
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            if (this.btnClicked)
-            {
-                switch (this._buttonName)
-                {
-                    case "playbtn":
-
-                }
-            }
             
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             base.Draw(gameTime, spriteBatch);
+            
         }
 
         public override void DrawFade(GameTime gameTime, SpriteBatch spriteBatch, int r, int g, int b)

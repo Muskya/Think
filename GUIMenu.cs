@@ -16,9 +16,11 @@ namespace Think
     {
         //Graphics
         private Texture2D _menuBackground;
+        private Vector2 _menuBackgroundPosition;
 
         //SFX
         private SoundEffect _menuOpeningSound, _menuClosingSound, _menuSlidingSound;
+        private SoundEffectInstance _openingInstance, _closingInstance, _slidingInstance;
 
         public bool isDisplayed = false;
         
@@ -30,11 +32,19 @@ namespace Think
         //Load le content du menu de base. 
         public virtual void LoadContent(ContentManager Content)
         {
-            this._menuBackground = Content.Load<Texture2D>("Graphics/menu_background");
+            this._menuBackground = Content.Load<Texture2D>("Graphics/guimenu_background_darksand");
+            //Centers the background on the screen
+            _menuBackgroundPosition = RandomManager.CenterTextureOnScreen(_menuBackground,
+                ref _menuBackgroundPosition);
 
+            //Load les sons
             this._menuOpeningSound = Content.Load<SoundEffect>("SFX/gui_menu_opening_1");
             this._menuClosingSound = Content.Load<SoundEffect>("SFX/gui_menu_closing_1");
             this._menuSlidingSound = Content.Load<SoundEffect>("SFX/gui_menu_sliding_1");
+            //Initialise les instances de SFX
+            _openingInstance = _menuOpeningSound.CreateInstance();
+            _closingInstance = _menuClosingSound.CreateInstance();
+            _slidingInstance = _menuSlidingSound.CreateInstance();
         }
 
         //A élaborer
@@ -50,12 +60,16 @@ namespace Think
         //d'une classe depuis d'autres classes, je dois les laisser en public.
         public virtual void Update(GameTime gameTime)
         {
-
+            
         }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this._menuBackground, Vector2.Zero, Color.White);
+            if (isDisplayed)
+            {
+                spriteBatch.Draw(_menuBackground, _menuBackgroundPosition, Color.White);
+            }
+            
         }
     }
 }
