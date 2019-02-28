@@ -15,6 +15,9 @@ namespace Think
 {
     abstract class GUIMenu
     {
+        //Internal private and sealed class just to handle the automatic
+        //add of buttons to a button list (use for update() & draw()) when
+        //the creation of a new one happens
         private sealed class GUIMenuButtons : Button
         {            
             public GUIMenuButtons(string name, Vector2 btnPos, Texture2D normal, Texture2D pressed,
