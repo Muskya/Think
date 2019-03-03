@@ -15,8 +15,8 @@ namespace Think
     {
         //Permet les actions sous condition (si le bouton est le bouton options.. etc)
         public string ButtonName { get; set; }
-        public bool btnClick = false; //Booléen de condition rapide (actions pendant clic, avant que l'utilisateur relève le doigt du clic)
-        public bool btnClicked = false; //Booléen de condition persistante (reste dans l'état après le clic)
+        public bool btnClicked = false; //Booléen de condition rapide (actions pendant clic, avant que l'utilisateur relève le doigt du clic)
+        public bool btnAction = false; //Booléen de condition pour l'action du bouton appropriée (ouverture menu, lancer sort, etc).
 
         public Texture2D TextureNormal{ get; set; }
         public Texture2D TexturePressed { get; set; }
@@ -28,8 +28,6 @@ namespace Think
         private SoundEffect ClickSound { get; set; }
         //Gère l'instance du son. Permet de jouer le son de A à Z.
         public SoundEffectInstance ClickSoundInstance { get; set; }
-
-        public bool btnContainsMouse = false;
 
         //Les propriétés du bouton sont définies dans le constructeur et non pas dans une
         //LoadContent() contrairement à GUIMenu par exemple, car les boutons seront très souvent
@@ -67,27 +65,25 @@ namespace Think
             //Si le curseur est sur le bouton
             if (BtnRectangle.Contains(Mouse.GetState().X, Mouse.GetState().Y))
             {
-                btnContainsMouse = true;
-
                 //Si on clique sur le bouton
                 if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                 {
                     //La texture du bouton affichée devient la texture Pressed
                     TextureDisplayed = TexturePressed;
-                    btnClick = true; //Booléen pour certaines conditions
-                    btnClicked = true;
+                    btnClicked = true; //Booléen pour certaines conditions
+                    btnAction = true; //Lance l'action correspondante au bouton
+
                     ClickSoundInstance.Volume = 0.55f; //Set du volume du son du clic
                     ClickSoundInstance.Play(); //Play le son du clic
                 }
                 if (Mouse.GetState().LeftButton == ButtonState.Released) //On relâche le bouton (post clic)
                 {
                     TextureDisplayed = TextureNormal; //La texture redevient normale
-                    btnClick = false; //Booléen passé à faux
+                    btnClicked = false; //Booléen passé à faux
                 }
             }
             else //Si le curseur est hors du bouton
             {
-                btnContainsMouse = false;
                 //La texture est de type "normal"
                 TextureDisplayed = TextureNormal; //Evite certains bugs / erreurs
             }

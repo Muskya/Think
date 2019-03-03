@@ -77,9 +77,16 @@ namespace Think
         //d'une classe depuis d'autres classes, je dois les laisser en public.
         public virtual void Update(GameTime gameTime)
         {
-            if (isOpened)
+            if (closeBtn.btnAction) {
+                this.isOpened = false;
+            }
+
+            if (isOpened) //Si le menu est ouvert
             {
-                closeBtn.Update(gameTime);       
+                closeBtn.Update(gameTime); 
+                //Update l'interaction présente au sein du menu
+            } else  {
+
             }
         }
 
@@ -87,7 +94,7 @@ namespace Think
         {
             if (isOpened) //Si le menu est ouvert (après clic sur bouton correspondant)
             {
-                if (!closeBtn.btnClicked) //Si on a pas cliqué sur le bouton de fermeture
+                if (!closeBtn.btnAction) //Si on a pas cliqué sur le bouton de fermeture
                 {
                     spriteBatch.Draw(GUIMenuBackground, GUIMenuBackgroundPosition, Color.White);
                     spriteBatch.DrawString(debugFont, this.MenuName, new Vector2(((Main.screenWidth / 2 - GUIMenuBackground.Width / 2) + 10), 115), Color.Black);

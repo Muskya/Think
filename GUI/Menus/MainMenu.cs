@@ -215,29 +215,7 @@ namespace Think
                 MainMenuButtons.menuPanel[i].Update(gameTime);
             }
 
-            if (playButton.btnClicked)
-            {
-                playMenu.isOpened = true;
-                playMenu.Update(gameTime);
 
-                //Eviter toute erreur (changera sûrement plus tard lors de la superposition de menu)
-                loadMenu.isOpened = false;
-                optionsMenu.isOpened = false;
-            } else if (loadButton.btnClicked)
-            {
-                loadMenu.isOpened = true;
-                loadMenu.Update(gameTime);
-
-                playMenu.isOpened = false;
-                optionsMenu.isOpened = false;
-            } else if (optionsButton.btnClicked)
-            {
-                optionsMenu.isOpened = true;
-                optionsMenu.Update(gameTime);
-
-                loadMenu.isOpened = false;
-                playMenu.isOpened = false;
-            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -257,12 +235,7 @@ namespace Think
                     MainMenuButtons.menuPanel[i].DrawFade(gameTime, spriteBatch, _r, _g, _b);
                 }
 
-                //Pour chaque menu présent dans le main menu
-                for (int i = 0; i < listeMenus.Count; i++)
-                {
-                    //La condition de draw est faite directement dans la classe GUIMenu
-                    listeMenus[i].Draw(gameTime, spriteBatch);
-                }
+
             }
 
             //Debug stuff
@@ -272,6 +245,15 @@ namespace Think
                 new Vector2(0, 20), Color.Green); //Temps passé depuis le dernier Update() (toujours 0.016666667 en général)
             spriteBatch.DrawString(_debugFontArial, String.Format("_r: {0}, _g: {1}, _b: {2}", _r, _g, _b),
                 new Vector2(0, 40), Color.PaleVioletRed);
+
+            spriteBatch.DrawString(_debugFontArial, "PlayMenu.isOpened:" + playMenu.isOpened.ToString(), new Vector2(500, 20), Color.White);
+            spriteBatch.DrawString(_debugFontArial, "PlayButton.btnAction:" + playButton.btnAction.ToString(), new Vector2(500, 40), Color.White);
+
+            spriteBatch.DrawString(_debugFontArial, "LoadMenu.isOpened:" + loadMenu.isOpened.ToString(), new Vector2(500, 70), Color.White);
+            spriteBatch.DrawString(_debugFontArial, "LoadButton.btnAction:" + loadButton.btnAction.ToString(), new Vector2(500, 90), Color.White);
+
+            spriteBatch.DrawString(_debugFontArial, "OptionsMenu.isOpened:" + optionsMenu.isOpened.ToString(), new Vector2(500, 120), Color.White);
+            spriteBatch.DrawString(_debugFontArial, "OPtionsButton.btnAction:" + optionsButton.btnAction.ToString(), new Vector2(500, 140), Color.White);
             #endregion 
         }
         
