@@ -68,7 +68,7 @@
     <Compile Include="GUI\Menus\OptionsMenu.cs" />
     <Compile Include="GameCore\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GUI\Buttons\MainMenuButton.cs" />
+    <Compile Include="GUI\Buttons\MainMenuButtons.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

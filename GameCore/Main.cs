@@ -16,7 +16,7 @@ namespace Think
     public class Main : Game
     {
         //Relatif au framework
-        #region Engine Relative
+        #region Monogame Relative
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         #endregion
@@ -47,7 +47,6 @@ namespace Think
             //Class references
             mainMenu = new MainMenu();
             optionsMenu = new OptionsMenu();
-            levelOne = new LevelOne();
             
             //Content related stuff
             Content.RootDirectory = "Content";
@@ -70,7 +69,7 @@ namespace Think
             screenHeight = 720; screenWidth = 1280;
             graphics.PreferredBackBufferHeight = (int)screenHeight;
             graphics.PreferredBackBufferWidth = (int)screenWidth;
-            Window.Title = "THINK ";
+            Window.Title = "THINK";
             Window.IsBorderless = false;
             Window.AllowUserResizing = true;
             Window.AllowAltF4 = true;

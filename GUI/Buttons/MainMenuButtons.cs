@@ -10,28 +10,26 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Think
 {
-    class MainMenuButton : Button
+    class MainMenuButtons : Button
     {
-        public static List<MainMenuButton> menuPanel = new List<MainMenuButton>();
+        //Liste accueillant tous les boutons du panel de boutons du Main Menu
+        public static List<MainMenuButtons> menuPanel = new List<MainMenuButtons>();
 
-        public MainMenuButton(string name, Vector2 btnPos, Texture2D normal, Texture2D pressed,
+        public MainMenuButtons(string name, Vector2 btnPos, Texture2D normal, Texture2D pressed,
             SoundEffect clickSound)
             :base(name, btnPos, normal, pressed, clickSound)
         {
-            menuPanel.Add(this);
+            menuPanel.Add(this); //Ajout du bouton instancié à la liste (menus Play, Load et Options)
         }
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
-
-            
+            base.Update(gameTime);      
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             base.Draw(gameTime, spriteBatch);
-            
         }
 
         public override void DrawFade(GameTime gameTime, SpriteBatch spriteBatch, int r, int g, int b)

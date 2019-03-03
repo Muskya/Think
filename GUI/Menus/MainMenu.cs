@@ -13,85 +13,89 @@ namespace Think
     {
         //GUI
         #region GUI
-        public Texture2D _backgroundMG { get; set; }
-        //Layers displaying conditional booleans
-        public bool _mgFadedOut = false, _mgFadedIn = false, skipIntro = false,
-            introSkipped = false, canSkip = true;
+        public Texture2D MonogameBackground { get; set; }
+        public Texture2D MainMenuBackground { get; set; }
 
-        public Texture2D _backgroundImg { get; set; }
         //Délai d'apparaition. 1Sec/60fps = 0.016 donc ~2 sec de délai
-        private double _fadeDelay = .010;
+        private double IntroductionDelay = .010;
         //Valeurs décimales de couleur. a = alpha 
         //(0, 0, 0) = Noir && (255, 255, 255) = White. <= L'image s'affiche normalement
-        private int _r = 0, _g = 0, _b = 0;
+        private int _r = 0, _g = 0, _b = 0; //Private, uniquement géré depuis cette classe
+
+        //Introduction Layers displaying conditional booleans
+        private bool mgFadedOut = false, mgFadedIn = false, skipIntro = false,
+            introSkipped = false, canSkip = true;
 
         //Panel de boutons
-        MainMenuButton loadButton, optionsButton, playButton;
-        private SoundEffect btnClickSound;
+        MainMenuButtons loadButton, optionsButton, playButton;
+        public SoundEffect BtnClickSound { get; set; }
 
         //Autres menus
         //Menus déclarés en tant que GUIMenu pour regrouper les types,
-        //mais initialisés en tant que leur classe respective.
         GUIMenu optionsMenu, playMenu, loadMenu;
         #endregion
 
-        //Main Menu Music
-        #region Music
-        public Song _backgroundTheme { get; set; }
-        private float _themeVolume = 0.45f;
-        private bool _themeLooping = true;
+        //Sound
+        #region Sound
+        public Song MainMenuTheme { get; set; }
+        public float MainMenuThemeVolume { get; set; } //Initialisation dans le constructeur car auto-property 
+        private bool MainMenuThemeLooping { get; set; } //Initialisation dans le constructeur car auto-property
         #endregion
 
         //Internal
         #region Internal
-        public static SpriteFont _debugFontArial { get; set; }
+        public static SpriteFont _debugFontArial { get; set; } //Police de debug
         #endregion
-
+        
+        //Constructor
         public MainMenu()
         {
+            //Initialisation des différents menus affichables depuis le Main Menu
             optionsMenu = new OptionsMenu();
             playMenu = new PlayMenu();
             loadMenu = new LoadMenu();
+
+            this.MainMenuThemeVolume = 0.45f; //Initialisation ici car auto-property (non possible en tête de classe)
+            this.MainMenuThemeLooping = true; //Initialisation ici car auto-property
         }
 
-        //LoadContent, contentManager du programme passé en paramètre lors de son
-        //appel dans Main.Cs
+        //Load du content du Main Menu, appelé dans Main.cs avec
+        //le ContentManager du jeu en argument
         public void LoadContent(ContentManager Content)
         {
-            //Raccourci pour récupérer la hauteur / largeur de l'écran
+            //Hauteur / largeur de l'écran
             var scrHeight = Main.screenHeight; var scrWidth = Main.screenWidth;
 
             //Load les différentes textures des backgrounds
-            this._backgroundImg = Content.Load<Texture2D>("Graphics/menu_background");
-            this._backgroundMG = Content.Load<Texture2D>("Graphics/monogame_screen");
-            this._backgroundTheme = Content.Load<Song>("Music/menu_theme");
+            this.MainMenuBackground = Content.Load<Texture2D>("Graphics/menu_background");
+            this.MonogameBackground = Content.Load<Texture2D>("Graphics/monogame_screen");
+            this.MainMenuTheme = Content.Load<Song>("Music/menu_theme");
 
-            this.btnClickSound = Content.Load<SoundEffect>("SFX/important_menu_clicksound");
-            //Buttons panel instanciation
-            #region GUI
-            playButton = new
-                MainMenuButton("playbtn", new Vector2(scrWidth - scrWidth + 60, scrHeight - scrHeight + 60),
-                Content.Load<Texture2D>("Graphics/Buttons/playBtnNormal2"),
-                Content.Load<Texture2D>("Graphics/Buttons/playBtnPressed2"), btnClickSound);
-            loadButton = new
-                MainMenuButton("loadbtn", new Vector2(playButton._position.X, playButton._position.Y + 125),
-                Content.Load<Texture2D>("Graphics/Buttons/loadBtnNormal2"),
-                Content.Load<Texture2D>("Graphics/Buttons/loadBtnPressed2"), btnClickSound);
-            optionsButton = new
-               MainMenuButton("optionsbtn", new Vector2(playButton._position.X, loadButton._position.Y + 65),
-               Content.Load<Texture2D>("Graphics/Buttons/optionsBtnNormal2"),
-               Content.Load<Texture2D>("Graphics/Buttons/optionsBtnPressed2"), btnClickSound);
-            #endregion
-
-            #region Other
-            _debugFontArial = Content.Load<SpriteFont>("Other/ariaFont");
-            #endregion
+            //Load du son lors du clic sur un bouton
+            this.BtnClickSound = Content.Load<SoundEffect>("SFX/important_menu_clicksound");
 
             //Load le content des différents menus accessibles depuis
             //le menu principal
             optionsMenu.LoadContent(Content);
             loadMenu.LoadContent(Content);
             playMenu.LoadContent(Content);
+
+            //Buttons panel instanciation
+            playButton = new
+                MainMenuButtons("playbtn", new Vector2(scrWidth - scrWidth + 60, scrHeight - scrHeight + 60),
+                Content.Load<Texture2D>("Graphics/Buttons/playBtnNormal2"),
+                Content.Load<Texture2D>("Graphics/Buttons/playBtnPressed2"), BtnClickSound);
+            loadButton = new
+                MainMenuButtons("loadbtn", new Vector2(playButton.Position.X, playButton.Position.Y + 125),
+                Content.Load<Texture2D>("Graphics/Buttons/loadBtnNormal2"),
+                Content.Load<Texture2D>("Graphics/Buttons/loadBtnPressed2"), BtnClickSound);
+            optionsButton = new
+               MainMenuButtons("optionsbtn", new Vector2(playButton.Position.X, loadButton.Position.Y + 65),
+               Content.Load<Texture2D>("Graphics/Buttons/optionsBtnNormal2"),
+               Content.Load<Texture2D>("Graphics/Buttons/optionsBtnPressed2"), BtnClickSound);
+
+            //Load de la debug font
+            _debugFontArial = Content.Load<SpriteFont>("Other/ariaFont");
         }
 
         //Gère l'introduction du jeu. (Mentions outils / autres
@@ -99,66 +103,64 @@ namespace Think
         public void GameIntro(GameTime gameTime)
         {
             //Si clic, on skip l'intro et on passe au fade-in du menu principal
-            if (canSkip && Mouse.GetState().LeftButton == ButtonState.Pressed)
+            if (canSkip && Mouse.GetState().LeftButton == ButtonState.Pressed) //canSkip = true de base
             {
                 skipIntro = true;
-            }
-
-            //Décrémente le délai de fade. gameTime.ElapsedGameTime =
-            //intervalle de temps depuis le dernier appel de Update(). 
-            //Donc ici, .TotalSeconds renverra 1 seconde / 60 frames = ~ 0.016.
-            //.Seconds renverrait 0 car .Seconds renvoie les secondes en INT. Donc 1, 2, 3..
-            if (!_mgFadedOut)
-            {
-                _fadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
-            }
-                
- 
-            //Si on est en train de fade (<= 0 en gros), qu'on a pas cliqué pour 
-            //skip l'intro et que l'intro est déjà passée (évite le retour dans ce if)
-            if (_fadeDelay <= 0 && !skipIntro && !introSkipped)
-            {
-                if (!_mgFadedIn) //Si la mention n'est pas apparue
-                {
-                    //Affiche la mention MonoGame (passe au blanc)
-                    _r++; _g++; _b++;
-
-                    if (_r >= 310 && _g >= 310 && _b >= 310)
-                    {
-                        _mgFadedIn = true;
-                        _fadeDelay = 0.020;
-                    }
-                        
-                }
-
-                if (_mgFadedIn) //Si la mention est apparue
-                {
-                    //Fais disparaître la mention MonoGame (passe au noir)
-                    _r--; _g--; _b--;
-
-                    if (_r <= 0 && _g <= 0 && _b <= 0)
-                    {
-                        _mgFadedIn = false; //On est plus en train d'afficher la mention
-                        _mgFadedOut = true; //La mention est terminée
-                    }
-                }
             }
 
             //Si on a cliqué pour skip l'intro
             if (skipIntro)
             {
-                _r--; _g--; _b--;
-                
-                if (_r <= 0 && _g <= 0 && _b <= 0)
+                _r--; _g--; _b--; //L'écran passe au noir pour la transition visuelle
+
+                if (_r <= 0 && _g <= 0 && _b <= 0) //Quand l'écran est devenu noir
                 {
-                    _mgFadedOut = true; //Lance l'affichage du menu dans Draw()
+                    mgFadedOut = true; //Lance l'affichage du menu principal dans Draw()
                     skipIntro = false; //Empêche le retour dans ce if()
                     introSkipped = true; //Empêche le retour dans le premier if() au dessus
-                }            
+                }
+            }
+
+            //Décrémente le délai de fade. 
+            //gameTime.ElapsedGameTime = intervalle de temps depuis le dernier appel de Update(). 
+            //Donc ici, .TotalSeconds renverra 1 seconde / 60 frames = ~ 0.016f.
+            if (!mgFadedOut)
+            {
+                IntroductionDelay -= gameTime.ElapsedGameTime.TotalSeconds;
+            }
+   
+            //Si on est en train de fade (delay <= 0 en gros), qu'on a pas cliqué pour 
+            //skip l'intro et que l'intro est déjà passée (évite le retour dans ce if)
+            if (IntroductionDelay <= 0 && !skipIntro && !introSkipped)
+            {
+                if (!mgFadedIn) //Si la mention monogame n'est pas apparue
+                {
+                    //Affiche la mention MonoGame (passe au blanc)
+                    _r++; _g++; _b++;
+
+                    if (_r >= 310 && _g >= 310 && _b >= 310) //Quand on arrive au rgb=blanc, la mention monogame est apparue
+                    {
+                        mgFadedIn = true;
+                        IntroductionDelay = 0.020; //Reset du fade delay
+                    }
+                        
+                }
+
+                if (mgFadedIn) //Si la mention est apparue
+                {
+                    //Fais disparaître la mention MonoGame (passe au noir)
+                    _r--; _g--; _b--;
+
+                    if (_r <= 0 && _g <= 0 && _b <= 0) //Quand l'écran est redevenu noir
+                    {
+                        mgFadedIn = false; //On est plus en train d'afficher la mention
+                        mgFadedOut = true; //La mention est terminée
+                    }
+                }
             }
 
             //Si la mention MonoGame est disparue
-            if (_mgFadedOut) //Lance l'apparition du main menu
+            if (mgFadedOut) //Lance l'apparition du main menu
             {
                 //On augmente la couleur, donc indirectement on affiche le main menu
                 if (_r <= 310 || _g <= 310 || _b <=310)
@@ -174,15 +176,11 @@ namespace Think
         //Called once just before Update()
         public void BeginRun()
         {
-            //Menu theme
-            #region Menu theme
-            MediaPlayer.IsRepeating = _themeLooping; //Boucle la musique
-            MediaPlayer.Volume = _themeVolume; //Default 0.45f
-     
-            MediaPlayer.Play(_backgroundTheme);
-
-
-            #endregion
+            //Lancement de la musique avant d'appeler les Update() et Draw() en boucle
+            //Classe MediaPlayer utilisée pour les "Songs"
+            MediaPlayer.IsRepeating = MainMenuThemeLooping; //Boucle la musique
+            MediaPlayer.Volume = MainMenuThemeVolume; //Default 0.45f
+            MediaPlayer.Play(MainMenuTheme);
         }
 
         //Limite les valeurs rgb entre -20 et 310.  
@@ -201,88 +199,63 @@ namespace Think
             GameIntro(gameTime);
 
             //Update les boutons du menu principal (Play, Load, Options)
-            for (int i = 0; i < MainMenuButton.menuPanel.Count; i++)
+            for (int i = 0; i < MainMenuButtons.menuPanel.Count; i++) //Pour chaque bouton de la liste
             {
                 //Update de chaque bouton (gère textures, états, booléens etc)
-                MainMenuButton.menuPanel[i].Update(gameTime);
+                MainMenuButtons.menuPanel[i].Update(gameTime);
 
                 //Si le bouton est cliqué (lance le menu approprié)
-                if (MainMenuButton.menuPanel[i].btnClicked == true)
+                if (MainMenuButtons.menuPanel[i].btnClick == true)
                 {
-                    //Si le bouton est le bouton de nom ...
-                    switch (MainMenuButton.menuPanel[i].ButtonName)
+                    //Si le bouton est tel bouton ...
+                    switch (MainMenuButtons.menuPanel[i].ButtonName)
                     {
-                        //Si c'est bouton play, on lance la musique d'ouverture
-                        //de menu et on affiche le menu
                         case "playbtn":
-                            optionsMenu._openingInstance.Play();
+                            optionsMenu.GUIMenuOpeningInstance.Play();
                             playMenu.isOpened = true;
+                            playMenu.Update(gameTime); //Update le menu play
                             break;
                         case "loadbtn":
-                            optionsMenu._openingInstance.Play();
+                            optionsMenu.GUIMenuOpeningInstance.Play();
                             loadMenu.isOpened = true;
+                            loadMenu.Update(gameTime); //Update le menu load
                             break;
                         case "optionsbtn":
-                            optionsMenu._openingInstance.Play();
+                            optionsMenu.GUIMenuOpeningInstance.Play();
                             optionsMenu.isOpened = true;
+                            optionsMenu.Update(gameTime); //Update le menu options
                             break;
                     }
-                    
                 }
             }
 
-            //Update les différents menus annexes au menu principal
-            if (optionsMenu.isOpened == true)
-            {
-                optionsMenu.Update(gameTime);
-            }
-            else if (loadMenu.isOpened == true)
-            {
-                loadMenu.Update(gameTime);
-            }
-            else if (playMenu.isOpened == true)
-            {
-                playMenu.Update(gameTime);
-            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             //Affichage de la mention MonoGame selon les conditions de Update()
-            spriteBatch.Draw(_backgroundMG, Vector2.Zero, new Color(_r, _g, _b));
+            spriteBatch.Draw(MonogameBackground, Vector2.Zero, new Color(_r, _g, _b));
 
             //Si la mention MonoGame a fini d'être affichée
-            if (_mgFadedOut) {
+            if (mgFadedOut) {
+
                 //Affiche le menu mrincipal
-                spriteBatch.Draw(_backgroundImg, Vector2.Zero, new Color(_r, _g, _b));
+                spriteBatch.Draw(MainMenuBackground, Vector2.Zero, new Color(_r, _g, _b));
 
                 //Affiche tous les boutons de la liste
-                for (int i = 0; i < MainMenuButton.menuPanel.Count; i++)
+                for (int i = 0; i < MainMenuButtons.menuPanel.Count; i++)
                 {
-                    MainMenuButton.menuPanel[i].DrawFade(gameTime, spriteBatch, _r, _g, _b);
+                    MainMenuButtons.menuPanel[i].Draw(gameTime, spriteBatch);
                 }
 
-                //Affiche les différents menus en fonction de celui qui a été ouvert
-                //suite à un clic (Update() de cette classe)
-                if (optionsMenu.isOpened == true)
-                {
-                    optionsMenu.Draw(gameTime, spriteBatch);
-                } else if (loadMenu.isOpened == true)
-                {
-                    loadMenu.Draw(gameTime, spriteBatch);
-                }
-                else if (playMenu.isOpened == true)
-                {
-                    playMenu.Draw(gameTime, spriteBatch);
-                }
-
+                
             }
 
             //Debug stuff
             #region Debug
-            spriteBatch.DrawString(_debugFontArial, _fadeDelay.ToString(), Vector2.Zero, Color.Green);
+            spriteBatch.DrawString(_debugFontArial, IntroductionDelay.ToString(), Vector2.Zero, Color.Green);
             spriteBatch.DrawString(_debugFontArial, gameTime.ElapsedGameTime.TotalSeconds.ToString(),
-                new Vector2(0, 20), Color.Green);
+                new Vector2(0, 20), Color.Green); //Temps passé depuis le dernier Update() (toujours 0.016666667 en général)
             spriteBatch.DrawString(_debugFontArial, String.Format("_r: {0}, _g: {1}, _b: {2}", _r, _g, _b),
                 new Vector2(0, 40), Color.PaleVioletRed);
             #endregion 
