@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Think
 {
+    //Classe uniquement présente pour avoir une liste de boutons propre au Main menu. Bad practice je pense
     class MainMenuButtons : Button
     {
         //Liste accueillant tous les boutons du panel de boutons du Main Menu

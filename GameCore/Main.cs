@@ -28,7 +28,6 @@ namespace Think
 
         //Références
         MainMenu mainMenu;
-        GUIMenu optionsMenu; //En GUIMenu pour regrouper les types
         Level levelOne;
 
         //Game States (more to come ?)
@@ -46,7 +45,6 @@ namespace Think
 
             //Class references
             mainMenu = new MainMenu();
-            optionsMenu = new OptionsMenu();
             
             //Content related stuff
             Content.RootDirectory = "Content";

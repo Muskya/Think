@@ -15,7 +15,8 @@ namespace Think
 {
     sealed class LoadMenu : GUIMenu
     {
-        public LoadMenu()
+        public LoadMenu(string menuName)
+            :base (menuName)
         {
 
         }

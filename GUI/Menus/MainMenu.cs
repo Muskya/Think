@@ -6,6 +6,11 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System;
 
 namespace Think
 {
@@ -32,7 +37,8 @@ namespace Think
 
         //Autres menus
         //Menus déclarés en tant que GUIMenu pour regrouper les types,
-        GUIMenu optionsMenu, playMenu, loadMenu;
+        public List<GUIMenu> listeMenus = new List<GUIMenu>();
+        public GUIMenu optionsMenu, playMenu, loadMenu;
         #endregion
 
         //Sound
@@ -51,9 +57,13 @@ namespace Think
         public MainMenu()
         {
             //Initialisation des différents menus affichables depuis le Main Menu
-            optionsMenu = new OptionsMenu();
-            playMenu = new PlayMenu();
-            loadMenu = new LoadMenu();
+            optionsMenu = new OptionsMenu("OptionsMenu");
+            playMenu = new PlayMenu("PlayMenu");
+            loadMenu = new LoadMenu("LoadMenu");
+
+            listeMenus.Add(optionsMenu);
+            listeMenus.Add(playMenu);
+            listeMenus.Add(loadMenu);
 
             this.MainMenuThemeVolume = 0.45f; //Initialisation ici car auto-property (non possible en tête de classe)
             this.MainMenuThemeLooping = true; //Initialisation ici car auto-property
@@ -76,21 +86,21 @@ namespace Think
 
             //Load le content des différents menus accessibles depuis
             //le menu principal
+            playMenu.LoadContent(Content);
             optionsMenu.LoadContent(Content);
             loadMenu.LoadContent(Content);
-            playMenu.LoadContent(Content);
-
+            
             //Buttons panel instanciation
             playButton = new
                 MainMenuButtons("playbtn", new Vector2(scrWidth - scrWidth + 60, scrHeight - scrHeight + 60),
                 Content.Load<Texture2D>("Graphics/Buttons/playBtnNormal2"),
                 Content.Load<Texture2D>("Graphics/Buttons/playBtnPressed2"), BtnClickSound);
             loadButton = new
-                MainMenuButtons("loadbtn", new Vector2(playButton.Position.X, playButton.Position.Y + 125),
+                MainMenuButtons("loadbtn", new Vector2(playButton.Position.X + 30, playButton.Position.Y + 65),
                 Content.Load<Texture2D>("Graphics/Buttons/loadBtnNormal2"),
                 Content.Load<Texture2D>("Graphics/Buttons/loadBtnPressed2"), BtnClickSound);
             optionsButton = new
-               MainMenuButtons("optionsbtn", new Vector2(playButton.Position.X, loadButton.Position.Y + 65),
+               MainMenuButtons("optionsbtn", new Vector2(playButton.Position.X + 60, loadButton.Position.Y + 65),
                Content.Load<Texture2D>("Graphics/Buttons/optionsBtnNormal2"),
                Content.Load<Texture2D>("Graphics/Buttons/optionsBtnPressed2"), BtnClickSound);
 
@@ -180,7 +190,7 @@ namespace Think
             //Classe MediaPlayer utilisée pour les "Songs"
             MediaPlayer.IsRepeating = MainMenuThemeLooping; //Boucle la musique
             MediaPlayer.Volume = MainMenuThemeVolume; //Default 0.45f
-            MediaPlayer.Play(MainMenuTheme);
+            //MediaPlayer.Play(MainMenuTheme);
         }
 
         //Limite les valeurs rgb entre -20 et 310.  
@@ -203,32 +213,31 @@ namespace Think
             {
                 //Update de chaque bouton (gère textures, états, booléens etc)
                 MainMenuButtons.menuPanel[i].Update(gameTime);
-
-                //Si le bouton est cliqué (lance le menu approprié)
-                if (MainMenuButtons.menuPanel[i].btnClick == true)
-                {
-                    //Si le bouton est tel bouton ...
-                    switch (MainMenuButtons.menuPanel[i].ButtonName)
-                    {
-                        case "playbtn":
-                            optionsMenu.GUIMenuOpeningInstance.Play();
-                            playMenu.isOpened = true;
-                            playMenu.Update(gameTime); //Update le menu play
-                            break;
-                        case "loadbtn":
-                            optionsMenu.GUIMenuOpeningInstance.Play();
-                            loadMenu.isOpened = true;
-                            loadMenu.Update(gameTime); //Update le menu load
-                            break;
-                        case "optionsbtn":
-                            optionsMenu.GUIMenuOpeningInstance.Play();
-                            optionsMenu.isOpened = true;
-                            optionsMenu.Update(gameTime); //Update le menu options
-                            break;
-                    }
-                }
             }
 
+            if (playButton.btnClicked)
+            {
+                playMenu.isOpened = true;
+                playMenu.Update(gameTime);
+
+                //Eviter toute erreur (changera sûrement plus tard lors de la superposition de menu)
+                loadMenu.isOpened = false;
+                optionsMenu.isOpened = false;
+            } else if (loadButton.btnClicked)
+            {
+                loadMenu.isOpened = true;
+                loadMenu.Update(gameTime);
+
+                playMenu.isOpened = false;
+                optionsMenu.isOpened = false;
+            } else if (optionsButton.btnClicked)
+            {
+                optionsMenu.isOpened = true;
+                optionsMenu.Update(gameTime);
+
+                loadMenu.isOpened = false;
+                playMenu.isOpened = false;
+            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -245,10 +254,15 @@ namespace Think
                 //Affiche tous les boutons de la liste
                 for (int i = 0; i < MainMenuButtons.menuPanel.Count; i++)
                 {
-                    MainMenuButtons.menuPanel[i].Draw(gameTime, spriteBatch);
+                    MainMenuButtons.menuPanel[i].DrawFade(gameTime, spriteBatch, _r, _g, _b);
                 }
 
-                
+                //Pour chaque menu présent dans le main menu
+                for (int i = 0; i < listeMenus.Count; i++)
+                {
+                    //La condition de draw est faite directement dans la classe GUIMenu
+                    listeMenus[i].Draw(gameTime, spriteBatch);
+                }
             }
 
             //Debug stuff

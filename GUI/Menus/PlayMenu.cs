@@ -15,7 +15,8 @@ namespace Think
 {
     sealed class PlayMenu : GUIMenu
     {
-        public PlayMenu()
+        public PlayMenu(string menuName)
+            :base (menuName)
         {
 
         }

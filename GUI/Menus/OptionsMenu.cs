@@ -15,7 +15,8 @@ namespace Think
 {
     sealed class OptionsMenu : GUIMenu
     {
-        public OptionsMenu()
+        public OptionsMenu(string menuName)
+            :base (menuName)
         {
 
         }
@@ -35,7 +36,7 @@ namespace Think
 
         public sealed override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            base.Draw(gameTime, spriteBatch);
+            base.Draw(gameTime, spriteBatch); 
         }
 
         public sealed override void DrawFade(GameTime gameTime, SpriteBatch spriteBatch, int r, int g, int b)
