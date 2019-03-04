@@ -15,8 +15,14 @@ namespace Think
     {
         //Permet les actions sous condition (si le bouton est le bouton options.. etc)
         public string ButtonName { get; set; }
-        public bool btnClicked = false; //Booléen de condition rapide (actions pendant clic, avant que l'utilisateur relève le doigt du clic)
-        public bool btnAction = false; //Booléen de condition pour l'action du bouton appropriée (ouverture menu, lancer sort, etc).
+        public bool btnClick = false; //True quand on clic / laisse appuyé; False quand on relâche
+        public bool doBtnAction = false; //Change d'état à chaque clic sur le bouton
+
+        //Gère les différents états de la souris pour effectuer les actions relatives au bouton une seule fois 
+        public MouseState currentMouseState;
+        public MouseState lastMouseState;
+
+        public GUIMenu menuToOpen;
 
         public Texture2D TextureNormal{ get; set; }
         public Texture2D TexturePressed { get; set; }
@@ -34,7 +40,7 @@ namespace Think
         //différents les uns des autres, alors que les GUIMenu auront toujours le même background,
         //même son d'ouverture / slide / fermeture, etc.
         public Button(string name, Vector2 btnPos, Texture2D normal, Texture2D pressed,
-            SoundEffect clickSound)
+            SoundEffect clickSound, GUIMenu menuToOpen)
         {
             //Attribution des paramètres aux propriétés
             this.ButtonName = name;
@@ -43,6 +49,9 @@ namespace Think
             this.TexturePressed = pressed;
             //Displayed texture is normal by default
             this.TextureDisplayed = this.TextureNormal;
+
+            //Indique au bouton quel est le menu à ouvrir lorsqu'il est cliqué
+            this.menuToOpen = menuToOpen;
 
             //L'initialisation du rectangle se fait une fois (pas dans le Update)
             //car la position du bouton est fixe. Elle ne bouge pas.
@@ -65,28 +74,37 @@ namespace Think
             //Si le curseur est sur le bouton
             if (BtnRectangle.Contains(Mouse.GetState().X, Mouse.GetState().Y))
             {
+                currentMouseState = Mouse.GetState();
+                
                 //Si on clique sur le bouton
-                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                if (currentMouseState.LeftButton == ButtonState.Pressed &&
+                    lastMouseState.LeftButton == ButtonState.Released)
                 {
                     //La texture du bouton affichée devient la texture Pressed
                     TextureDisplayed = TexturePressed;
-                    btnClicked = true; //Booléen pour certaines conditions
-                    btnAction = true; //Lance l'action correspondante au bouton
-
+                    doBtnAction = !doBtnAction; //Booléen pour certaines conditions Avant/Après (passe à false pendant le released)
                     ClickSoundInstance.Volume = 0.55f; //Set du volume du son du clic
                     ClickSoundInstance.Play(); //Play le son du clic
                 }
-                if (Mouse.GetState().LeftButton == ButtonState.Released) //On relâche le bouton (post clic)
-                {
-                    TextureDisplayed = TextureNormal; //La texture redevient normale
-                    btnClicked = false; //Booléen passé à faux
-                }
-            }
-            else //Si le curseur est hors du bouton
+
+                lastMouseState = currentMouseState; //Si on a laissé appuyé sur le bouton, lastMouseState devient
+                //ButtonState.Pressed et donc on entre pas dans la première condition
+            } else //Si le curseur est hors du bouton
             {
                 //La texture est de type "normal"
                 TextureDisplayed = TextureNormal; //Evite certains bugs / erreurs
             }
+
+            //Si on a activé l'action du bouton
+            if (doBtnAction)
+            {
+                TextureDisplayed = TexturePressed; //Le bouton reste enfoncé pendant que l'on intéragis avec l'action du bouton
+            }
+            else
+            {
+                TextureDisplayed = TextureNormal; //Sinon la texture redeveitn normale
+            }
+
         }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)

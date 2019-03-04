@@ -28,9 +28,9 @@ namespace Think
         //clique sur le bouton d'ouverture du menu (cela peut être depuis le main menu, ou depuis ingame)
 
         //UI
-        public Button closeBtn;
         public SpriteFont debugFont;
 
+        //CONSTRUCTOR
         public GUIMenu(string menuName)
         {
             this.MenuName = menuName;
@@ -54,13 +54,6 @@ namespace Think
             GUIMenuClosingInstance = GUIMenuClosingSound.CreateInstance();
             GUIMenuSlidingInstance = GUIMenuSlidingSound.CreateInstance();
 
-            closeBtn = new Button("closebtn", new Vector2(
-                ((this.GUIMenuBackground.Width - 200) + ((Main.screenWidth - this.GUIMenuBackground.Width)) / 2),
-                ((this.GUIMenuBackground.Height - 60) + ((Main.screenHeight - this.GUIMenuBackground.Height)) / 2)),
-                Content.Load<Texture2D>("Graphics/Buttons/small_closeBtnNormal"),
-                Content.Load<Texture2D>("Graphics/Buttons/small_closeBtnPressed"),
-                Content.Load<SoundEffect>("SFX/important_menu_clicksound"));
-
             debugFont = Content.Load<SpriteFont>("Other/ariaFont");
         }
 
@@ -77,33 +70,18 @@ namespace Think
         //d'une classe depuis d'autres classes, je dois les laisser en public.
         public virtual void Update(GameTime gameTime)
         {
-            if (closeBtn.btnAction) {
-                this.isOpened = false;
-            }
 
-            if (isOpened) //Si le menu est ouvert
-            {
-                closeBtn.Update(gameTime); 
-                //Update l'interaction présente au sein du menu
-            } else  {
-
-            }
         }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (isOpened) //Si le menu est ouvert (après clic sur bouton correspondant)
+            if (isOpened)
             {
-                if (!closeBtn.btnAction) //Si on a pas cliqué sur le bouton de fermeture
-                {
-                    spriteBatch.Draw(GUIMenuBackground, GUIMenuBackgroundPosition, Color.White);
-                    spriteBatch.DrawString(debugFont, this.MenuName, new Vector2(((Main.screenWidth / 2 - GUIMenuBackground.Width / 2) + 10), 115), Color.Black);
-                    closeBtn.Draw(gameTime, spriteBatch);
-                } else { //Si on a cliqué sur le bouton de fermeture, on ne draw plus rien (on ferme le menu)
+                spriteBatch.Draw(GUIMenuBackground, GUIMenuBackgroundPosition, Color.White);
+                spriteBatch.DrawString(debugFont, this.MenuName, new Vector2(((Main.screenWidth / 2 - GUIMenuBackground.Width / 2) + 10), 115), Color.Black);
+            }  else {
 
-                }
-                
-            }            
+            }
         }
 
         public virtual void DrawFade(GameTime gameTime, SpriteBatch spriteBatch, int r, int g, int b)
