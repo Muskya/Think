@@ -23,21 +23,13 @@ namespace Think
 
         #region Propriétés de jeu
         public static float screenHeight, screenWidth;
-        public static bool firstSaveCreated = false;
         #endregion
+
+        GameManager.GameState gameState;
 
         //Références
         MainMenu mainMenu;
         Level levelOne;
-
-        //Game States (more to come ?)
-        GameState gameState;
-        public enum GameState
-        {
-            MainMenu,
-            GameRunning,
-            GameOver
-        }
 
         public Main()
         {
@@ -45,7 +37,8 @@ namespace Think
 
             //Class references
             mainMenu = new MainMenu();
-            
+            levelOne = new LevelOne();
+
             //Content related stuff
             Content.RootDirectory = "Content";
         }
@@ -57,7 +50,7 @@ namespace Think
             #region Screen relative
 
             //Engine relative
-            gameState = GameState.MainMenu;
+            gameState = GameManager.GameState.MainMenu;
 
             //GPU 
             graphics.HardwareModeSwitch = false;
@@ -71,7 +64,6 @@ namespace Think
             Window.IsBorderless = false;
             Window.AllowUserResizing = true;
             Window.AllowAltF4 = true;
-
             //Others
             IsMouseVisible = true;
 
@@ -112,7 +104,19 @@ namespace Think
                 Exit();
             #endregion
 
-            mainMenu.Update(gameTime);
+            switch (gameState)
+            {
+                case GameManager.GameState.MainMenu:
+                    //Draw le MainMenu. (Mention Monogame + Title Screen)
+                    mainMenu.Update(gameTime);
+                    break;
+                case GameManager.GameState.GameRunning:
+                    levelOne.Update(gameTime);
+                    break;
+                case GameManager.GameState.GameOver:
+                    mainMenu.Update(gameTime); //à modifier, on va pas reDraw le main menu à chaque mort.
+                    break;
+            }
 
             base.Update(gameTime);
         }
@@ -121,9 +125,19 @@ namespace Think
         {
             spriteBatch.Begin();
 
-            //Draw le MainMenu. (Mention Monogame + Title Screen)
-            mainMenu.Draw(gameTime, spriteBatch);
-            
+            switch (gameState)
+            {
+                case GameManager.GameState.MainMenu:
+                    //Draw le MainMenu. (Mention Monogame + Title Screen)
+                    mainMenu.Draw(gameTime, spriteBatch);
+                    break;
+                case GameManager.GameState.GameRunning:
+                    levelOne.Draw(gameTime, spriteBatch);
+                    break;
+                case GameManager.GameState.GameOver:
+                    mainMenu.Draw(gameTime, spriteBatch); //à modifier, on va pas reDraw le main menu à chaque mort.
+                    break;
+            }
 
             spriteBatch.End();
 

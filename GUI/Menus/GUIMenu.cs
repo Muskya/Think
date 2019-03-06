@@ -42,7 +42,7 @@ namespace Think
             //GUI Menu main background for almost any GUI Menu
             this.GUIMenuBackground = Content.Load<Texture2D>("Graphics/guimenu_background_darksand");
             //Centers the background on the screen
-            GUIMenuBackgroundPosition = RandomManager.CenterElementOnScreen(GUIMenuBackground,
+            GUIMenuBackgroundPosition = GameManager.CenterElementOnScreen(GUIMenuBackground,
                 ref GUIMenuBackgroundPosition);
 
             //Load les SFX de Gui Menus
@@ -70,7 +70,7 @@ namespace Think
         //d'une classe depuis d'autres classes, je dois les laisser en public.
         public virtual void Update(GameTime gameTime)
         {
-
+            
         }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)

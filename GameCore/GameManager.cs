@@ -7,10 +7,18 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Think
 {
-    static class RandomManager
+    static class GameManager
     {
+        //Game States (more to come ?)
+        public enum GameState
+        {
+            MainMenu,
+            GameRunning,
+            GameOver
+        }
+
         //Permettra d'utiliser des Input relatifs à toutes
-        //les classes avec RandomManager.AltF4Pressed() par exemple...
+        //les classes avec GameManager.AltF4Pressed() par exemple...
 
         public static Vector2 CenterElementOnScreen(Texture2D texture, ref Vector2 pos)
         {

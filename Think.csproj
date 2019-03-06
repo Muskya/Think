@@ -63,7 +63,7 @@
     <Compile Include="GUI\Menus\GUIMenu.cs" />
     <Compile Include="GUI\Menus\LoadMenu.cs" />
     <Compile Include="GUI\Menus\PlayMenu.cs" />
-    <Compile Include="GameCore\RandomManager.cs" />
+    <Compile Include="GameCore\GameManager.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Levels\LevelOne.cs" />
     <Compile Include="GameCore\Main.cs" />
@@ -127,7 +127,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>

@@ -92,7 +92,7 @@ namespace Think
             
             //Buttons panel instanciation
             playButton = new
-                MainMenuButtons("playbtn", new Vector2(scrWidth - scrWidth + 60, scrHeight - scrHeight + 60),
+                MainMenuButtons("playbtn", new Vector2(scrWidth - scrWidth + 40, scrHeight - scrHeight + 60),
                 Content.Load<Texture2D>("Graphics/Buttons/playBtnNormal2"),
                 Content.Load<Texture2D>("Graphics/Buttons/playBtnPressed2"), BtnClickSound, playMenu);
             loadButton = new
@@ -190,7 +190,7 @@ namespace Think
             //Classe MediaPlayer utilisée pour les "Songs"
             MediaPlayer.IsRepeating = MainMenuThemeLooping; //Boucle la musique
             MediaPlayer.Volume = MainMenuThemeVolume; //Default 0.45f
-            //MediaPlayer.Play(MainMenuTheme);
+            MediaPlayer.Play(MainMenuTheme);
         }
 
         //Limite les valeurs rgb entre -20 et 310.  
