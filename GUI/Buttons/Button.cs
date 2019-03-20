@@ -76,7 +76,16 @@ namespace Think
             {
                 currentMouseState = Mouse.GetState();
                 
-                //Si on clique sur le bouton
+                //Si on single cli sur le bouton et que l'état change dès qu'on release
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                {
+                    btnClick = true;
+                } else if (Mouse.GetState().LeftButton == ButtonState.Released)
+                {
+                    btnClick = false;
+                }
+
+                //Si on clique sur le bouton (et que l'état du bouton doit reste)
                 if (currentMouseState.LeftButton == ButtonState.Pressed &&
                     lastMouseState.LeftButton == ButtonState.Released)
                 {

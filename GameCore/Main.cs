@@ -46,11 +46,11 @@ namespace Think
         //BASE.INITIALIZE() CALLS LOADCONTENT() && UNLOADCONTENT()
         protected override void Initialize()
         {
-            //Screen relative
-            #region Screen relative
-
             //Engine relative
             gameState = GameManager.GameState.MainMenu;
+
+            //Screen relative
+            #region Screen relative
 
             //GPU 
             graphics.HardwareModeSwitch = false;
@@ -62,7 +62,7 @@ namespace Think
             graphics.PreferredBackBufferWidth = (int)screenWidth;
             Window.Title = "THINK";
             Window.IsBorderless = false;
-            Window.AllowUserResizing = true;
+            Window.AllowUserResizing = false;
             Window.AllowAltF4 = true;
             //Others
             IsMouseVisible = true;
@@ -70,8 +70,6 @@ namespace Think
             //Needed for any modification
             graphics.ApplyChanges();
             #endregion
-
-            //Menus
 
             base.Initialize();
         }
@@ -81,7 +79,11 @@ namespace Think
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //Load le content du main menu
-            mainMenu.LoadContent(this.Content);
+            if (gameState == GameManager.GameState.MainMenu)
+                mainMenu.LoadContent(this.Content);
+
+            //Load le content des levels uniquement quand c'est nécessaire ?
+            //(Lazy Loading)
 
         }
 

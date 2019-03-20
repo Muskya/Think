@@ -214,7 +214,7 @@ namespace Think
                 //Update de chaque bouton (gère textures, états, booléens etc)
                 MainMenuButtons.mainMenuButtonsList[i].Update(gameTime);
 
-                //Ouverture / Fermeture du menu par clic sur le bouton correspondant
+                //Ouverture / Fermeture du menu par clic sur le bouton correspondant (clic persistant)
                 if (MainMenuButtons.mainMenuButtonsList[i].doBtnAction)
                 {
                     MainMenuButtons.mainMenuButtonsList[i].menuToOpen.isOpened = true;
@@ -223,7 +223,6 @@ namespace Think
                 {
                     MainMenuButtons.mainMenuButtonsList[i].menuToOpen.isOpened = false;
                 }
-
             }
         }
 
